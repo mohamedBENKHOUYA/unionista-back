@@ -5,7 +5,7 @@ module.exports = {
   apps: [
     {
       name: 'back',
-      script: 'srv/back/dist/main.js',
+      script: 'srv/back/current/dist/main.js',
       cwd: '/',
       time: true,
       instances: 1,
