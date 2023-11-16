@@ -15,6 +15,7 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$PREPROD_SSH_KEY" > ./deploy.key
           sudo chmod 600 ./deploy.key
+          ls
         shell: bash
         env:
           PREPROD_SSH_KEY: ${{secrets.PREPROD_SSH_KEY}}
