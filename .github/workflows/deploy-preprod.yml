@@ -13,11 +13,11 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "$PREPROD_PUBLIC_SSH_KEY" > ./deploy.key
+          echo "$PREPROD_SSH_KEY" > ./deploy.key
           sudo chmod 600 ./deploy.key
         shell: bash
         env:
-          PREPROD_SSH_KEY: ${{secrets.PREPROD_SSH_KEY}}
+          PREPROD_SSH_KEY: ${{secrets.PREPROD_PUBLIC_SSH_KEY}}
 
       - name: Export environment variables
         run: |
