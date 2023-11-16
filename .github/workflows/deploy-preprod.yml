@@ -16,6 +16,7 @@ jobs:
           echo "$PREPROD_SSH_KEY" > ./deploy.key
           sudo chmod 600 ./deploy.key
           echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          ls -a
         shell: bash
         env:
           PREPROD_SSH_KEY: ${{secrets.PREPROD_SSH_KEY}}
