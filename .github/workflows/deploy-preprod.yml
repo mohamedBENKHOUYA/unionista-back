@@ -15,10 +15,11 @@ jobs:
           mkdir -p ~/.ssh/
           echo "$PREPROD_SSH_KEY" > ./deploy.key
           sudo chmod 600 ./deploy.key
-          ls
+          echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
         shell: bash
         env:
           PREPROD_SSH_KEY: ${{secrets.PREPROD_SSH_KEY}}
+          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
 
       - name: Export environment variables
         run: |
