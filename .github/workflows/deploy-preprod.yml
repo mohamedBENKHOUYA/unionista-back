@@ -13,7 +13,7 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh/
-          echo "$PREPROD_SSH_KEY" > ./deploy.key
+          echo "$PREPROD_PUBLIC_SSH_KEY" > ./deploy.key
           sudo chmod 600 ./deploy.key
         shell: bash
         env:
@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.PREPROD_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
           source: ".env"
-          target: "/srv/back"
+          target: "/srv/back/source"
 
       - name: Install PM2
         run: npm i pm2 --force
