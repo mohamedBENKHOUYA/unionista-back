@@ -5,7 +5,7 @@ module.exports = {
   apps: [
     {
       name: 'back',
-      script: 'srv/back/current/dist/main.js',
+      script: 'srv/back/current/start_back.sh',
       cwd: '/',
       time: true,
       instances: 1,
@@ -32,7 +32,7 @@ module.exports = {
       repo: 'git@github.com:mohamedBENKHOUYA/unionista-back.git',
       path: '/srv/back',
       'post-deploy':
-        'npm install && ls -a && npm run build && pm2 kill && pm2 reload ecosystem.config.js --env preprod --update-env && pm2 save && docker compose up --build',
+        'npm install && ls -a && npm run build && pm2 kill && pm2 reload ecosystem.config.js --env preprod --update-env && pm2 save',
     },
   },
 };
