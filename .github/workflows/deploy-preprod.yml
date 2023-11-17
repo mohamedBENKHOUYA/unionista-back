@@ -40,7 +40,7 @@ jobs:
           key: ${{ secrets.PREPROD_SSH_KEY }}
           # password: ${{ secrets.PREPROD_PASSWORD }}
           source: '.env'
-          target: '/srv/back'
+          target: '/srv/back/source'
 
       - name: Install PM2
         run: npm i pm2 --force
