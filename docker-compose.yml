@@ -18,3 +18,5 @@ services:
       - ${NGINX_STATIC_LOCATION}/:/var/www/html:rw,cached
     ports:
       - 80:80
+    external_links:
+      - back
