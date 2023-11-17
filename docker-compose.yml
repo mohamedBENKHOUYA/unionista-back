@@ -15,6 +15,6 @@ services:
     image: nginx
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,cached
-      - .:/var/www/html:rw,cached
+      - ${NGINX_STATIC_LOCATION}/:/var/www/html:rw,cached
     ports:
       - 80:80
