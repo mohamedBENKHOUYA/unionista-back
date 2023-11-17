@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  back:
+    container_name: back
+    build:
+      context: './docker/back'
+      dockerfile: './api.Dockerfile'
+    volumes:
+      - '.:/srv/back:rw,cached'
+    command: npm run ${NEST_START_CMD}
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,cached
+      - ${NGINX_STATIC_LOCATION}/:/var/www/html:rw,cached
+    ports:
+      - 80:80
