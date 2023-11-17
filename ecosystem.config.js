@@ -5,8 +5,7 @@ module.exports = {
   apps: [
     {
       name: 'back',
-      script:
-        'docker compose --file /srv/back/current/docker-compose.yml up --build',
+      script: '/srv/back/current/start_back.sh',
       cwd: '/',
       time: true,
       instances: 1,

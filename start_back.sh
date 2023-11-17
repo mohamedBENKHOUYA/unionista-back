@@ -1,1 +1,1 @@
-docker compose up --build
+docker compose --file /srv/back/current/docker-compose.yml up --build
