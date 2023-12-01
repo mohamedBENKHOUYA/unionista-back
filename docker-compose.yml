@@ -4,8 +4,8 @@ services:
   back:
     container_name: back
     build:
-      context: './docker/back'
-      dockerfile: './api.Dockerfile'
+      context: './'
+      dockerfile: './docker/back/api.Dockerfile'
     volumes:
       - '.:/srv/back:rw,cached'
       - '/srv/back/node_modules'

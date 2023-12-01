@@ -21,16 +21,7 @@ jobs:
           PREPROD_SSH_KEY: ${{secrets.PREPROD_SSH_KEY}}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
 
-      - name: Export environment variables
-        run: |
-          echo PREPROD_PORT="$PREPROD_PORT" > ./.env
-          echo NGINX_STATIC_LOCATION="$NGINX_STATIC_LOCATION" >> ./.env
-          echo NEST_START_CMD="$NEST_START_CMD" >> ./.env
-          
-        env:
-          PREPROD_PORT: '${{ secrets.PREPROD_PORT }}'
-          NGINX_STATIC_LOCATION: '${{ secrets.NGINX_STATIC_LOCATION }}'
-          NEST_START_CMD: '${{ secrets.NEST_START_CMD }}'
+      d
 
       - name: copy .env file via ssh
         uses: appleboy/scp-action@master
