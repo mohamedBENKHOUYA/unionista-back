@@ -9,6 +9,9 @@ RUN chown -R node:node /usr/local/lib/node_modules \
 USER node:node
 
 WORKDIR /srv/back
+COPY package.json .
+RUN npm i
+
 
 EXPOSE 3000
 

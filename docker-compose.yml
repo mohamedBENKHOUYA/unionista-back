@@ -8,6 +8,7 @@ services:
       dockerfile: './api.Dockerfile'
     volumes:
       - '.:/srv/back:rw,cached'
+      - '/srv/back/node_modules'
     command: npm run ${NEST_START_CMD}
 
   nginx:
@@ -18,3 +19,15 @@ services:
       - ${NGINX_STATIC_LOCATION}:/var/www/html:rw,cached
     ports:
       - 80:80
+
+  back_db:
+    platform: linux/x86_64
+    image: 'postgres:14-alpine'
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=back_db
