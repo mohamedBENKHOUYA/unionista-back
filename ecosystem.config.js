@@ -24,7 +24,7 @@ module.exports = {
     {
       name: 'front-next',
       script: '/srv/front/start_front.sh',
-      cwd: '/',
+      cwd: '/srv/front',
       time: true,
       instances: 1,
       autorestart: true,
