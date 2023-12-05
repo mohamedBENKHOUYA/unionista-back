@@ -19,7 +19,7 @@ jobs:
         shell: bash
         env:
           PREPROD_SSH_KEY: ${{secrets.PREPROD_SSH_KEY}}
-          SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+          # SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
 
       - name: Export environment variables
         run: |
