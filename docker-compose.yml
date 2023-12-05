@@ -10,15 +10,19 @@ services:
       - '.:/srv/back:rw,cached'
       - '/srv/back/node_modules'
     command: npm run ${NEST_START_CMD}
+    networks:
+      - unionistashop_network
 
   nginx:
     container_name: nginx
-    image: nginx
+    image: nginx:1
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,cached
       - ${NGINX_STATIC_LOCATION}:/var/www/html:rw,cached
     ports:
       - 80:80
+    networks:
+      - unionistashop_network
 
   back_db:
     platform: linux/x86_64
@@ -31,3 +35,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=back_db
+    networks:
+      - unionistashop_network
+
+networks:
+    unionistashop_network:
+        external: true

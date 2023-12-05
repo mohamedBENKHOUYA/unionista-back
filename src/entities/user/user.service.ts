@@ -22,6 +22,10 @@ export class UserService {
     @Inject(jwtConfigEnv.KEY) private readonly jwtConfig: JwtConfig,
   ) {}
 
+  async list() {
+    return this.userRepository.find();
+  }
+
   async signin(data: SigninDto) {
     const user = await this.userRepository.findOneBy({
       emailAddress: data.email,

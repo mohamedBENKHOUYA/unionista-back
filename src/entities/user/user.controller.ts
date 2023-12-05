@@ -87,4 +87,15 @@ export class UserController {
 
   @Post('/signout')
   signout() {}
+
+  @Get()
+  @HttpCode(200)
+  @ApiOperation({ summary: 'list all users' })
+  @ApiOkResponse({
+    description: 'List all users',
+  })
+  async list() {
+    this.logger.log('GET list of users', 'access');
+    return this.userService.list();
+  }
 }
