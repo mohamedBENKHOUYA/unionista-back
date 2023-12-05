@@ -32,6 +32,10 @@ jobs:
           echo TYPEORM_PASSWORD="$TYPEORM_PASSWORD" >> ./.env
           echo TYPEORM_DATABASE="$TYPEORM_DATABASE" >> ./.env
           echo TYPEORM_RETRY_ATTEMPTS="$TYPEORM_RETRY_ATTEMPTS" >> ./.env
+          echo JWT_PRIVATE_KEY="$JWT_PRIVATE_KEY" >> ./.env
+          echo JWT_TTL="$JWT_TTL" >> ./.env
+          echo JWT_ISSUER="$JWT_ISSUER" >> ./.env
+          echo HASH_SALT="$HASH_SALT" >> ./.env
         env:
           PREPROD_PORT: '${{ secrets.PREPROD_PORT }}'
           NGINX_STATIC_LOCATION: '${{ secrets.NGINX_STATIC_LOCATION }}'
@@ -42,6 +46,10 @@ jobs:
           TYPEORM_PASSWORD: '${{ secrets.TYPEORM_PASSWORD }}'
           TYPEORM_DATABASE: '${{ secrets.TYPEORM_DATABASE }}'
           TYPEORM_RETRY_ATTEMPTS: '${{ secrets.TYPEORM_RETRY_ATTEMPTS }}'
+          JWT_PRIVATE_KEY: '${{ secrets.JWT_PRIVATE_KEY }}'
+          JWT_TTL: '${{ secrets.JWT_TTL }}'
+          JWT_ISSUER: '${{ secrets.JWT_ISSUER }}'
+          HASH_SALT: '${{ secrets.HASH_SALT }}'
 
       - name: copy .env file via ssh
         uses: appleboy/scp-action@master
