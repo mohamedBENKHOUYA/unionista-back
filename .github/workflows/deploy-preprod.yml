@@ -26,10 +26,22 @@ jobs:
           echo PREPROD_PORT="$PREPROD_PORT" > ./.env
           echo NGINX_STATIC_LOCATION="$NGINX_STATIC_LOCATION" >> ./.env
           echo NEST_START_CMD="$NEST_START_CMD" >> ./.env
+          echo TYPEORM_HOST="$TYPEORM_HOST" >> ./.env
+          echo TYPEORM_PORT="$TYPEORM_PORT" >> ./.env
+          echo TYPEORM_USERNAME="$TYPEORM_USERNAME" >> ./.env
+          echo TYPEORM_PASSWORD="$TYPEORM_PASSWORD" >> ./.env
+          echo TYPEORM_DATABASE="$TYPEORM_DATABASE" >> ./.env
+          echo TYPEORM_RETRY_ATTEMPTS="$TYPEORM_RETRY_ATTEMPTS" >> ./.env
         env:
           PREPROD_PORT: '${{ secrets.PREPROD_PORT }}'
           NGINX_STATIC_LOCATION: '${{ secrets.NGINX_STATIC_LOCATION }}'
           NEST_START_CMD: '${{ secrets.NEST_START_CMD }}'
+          TYPEORM_HOST: '${{ secrets.TYPEORM_HOST }}'
+          TYPEORM_PORT: '${{ secrets.TYPEORM_PORT }}'
+          TYPEORM_USERNAME: '${{ secrets.TYPEORM_USERNAME }}'
+          TYPEORM_PASSWORD: '${{ secrets.TYPEORM_PASSWORD }}'
+          TYPEORM_DATABASE: '${{ secrets.TYPEORM_DATABASE }}'
+          TYPEORM_RETRY_ATTEMPTS: '${{ secrets.TYPEORM_RETRY_ATTEMPTS }}'
 
       - name: copy .env file via ssh
         uses: appleboy/scp-action@master
