@@ -22,7 +22,7 @@ module.exports = {
       },
     },
     {
-      name: 'front-next',
+      name: 'front',
       script: '/srv/front/start_front.sh',
       cwd: '/srv/front',
       time: true,
