@@ -38,10 +38,10 @@ services:
     networks:
       - unionistashop_network
 
-networks:
-  unionistashop_network:
-    driver: bridge
-    name: unionistashop_network
 # networks:
-#     unionistashop_network:
-#         external: true
+#   unionistashop_network:
+#     driver: bridge
+#     name: unionistashop_network
+networks:
+    unionistashop_network:
+        external: true
