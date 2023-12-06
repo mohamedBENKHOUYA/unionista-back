@@ -23,6 +23,7 @@ services:
       - 80:80
     networks:
       - unionistashop_network
+    restart: on-failure
 
   back_db:
     platform: linux/x86_64
@@ -43,5 +44,5 @@ services:
 #     driver: bridge
 #     name: unionistashop_network
 networks:
-    unionistashop_network:
-        external: true
+  unionistashop_network:
+    external: true
