@@ -32,7 +32,7 @@ module.exports = {
       repo: 'git@github.com:mohamedBENKHOUYA/unionista-back.git',
       path: '/srv/back',
       'post-deploy':
-        'pm2 kill && pm2 reload ecosystem.config.js --env preprod --update-env && pm2 save',
+        "pm2 kill && pm2 start /srv/front/current/start_front.sh && childProcess.exec('pm2 reload ecosystem.config.js --env preprod --update-env') && pm2 save",
     },
   },
 };
