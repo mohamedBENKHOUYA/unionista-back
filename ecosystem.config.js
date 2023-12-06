@@ -50,7 +50,7 @@ module.exports = {
       repo: 'git@github.com:mohamedBENKHOUYA/unionista-back.git',
       path: '/srv/back',
       'post-deploy':
-        'pm2 kill && pm2 start ecosystem.config.js --env preprod --update-env && pm2 save',
+        'pm2 kill && pm2 reload ecosystem.config.js --env preprod --update-env && pm2 save',
     },
   },
 };
