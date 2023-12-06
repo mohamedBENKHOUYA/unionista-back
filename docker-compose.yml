@@ -9,7 +9,7 @@ services:
     volumes:
       - '.:/srv/back:rw,cached'
       - '/srv/back/node_modules'
-    command: npm run ${NEST_START_CMD}
+    command: bash -c "npm run install && npm run build && npm run ${NEST_START_CMD}"
     networks:
       - unionistashop_network
 
