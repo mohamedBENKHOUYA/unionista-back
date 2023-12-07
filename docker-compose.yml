@@ -15,7 +15,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx
+    image: nginx:1
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:rw,cached
       - /etc/ssl:/etc/ssl:rw,cached
