@@ -10,6 +10,7 @@ services:
       - '.:/srv/back:rw,cached'
       - '/srv/back/node_modules'
     command: bash -c "npm run build && npm run migration:run && npm run ${NEST_START_CMD}"
+    restart: on-failure
     networks:
       - unionistashop_network
 
