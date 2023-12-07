@@ -17,7 +17,7 @@ typeormConfigSchema.validate(process.env);
 
 export default new DataSource({
   type: 'postgres',
-  host: 'localhost',
+  host: process.env.TYPEORM_HOST || 'localhost',
   port: parseInt(process.env.TYPEORM_PORT),
   username: process.env.TYPEORM_USERNAME,
   password: process.env.TYPEORM_PASSWORD,
