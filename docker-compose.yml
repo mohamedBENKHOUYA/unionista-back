@@ -22,6 +22,7 @@ services:
       - ${NGINX_STATIC_LOCATION}:/var/www/html:rw,cached
     ports:
       - 80:80
+      - 443:443
     networks:
       - unionistashop_network
     restart: on-failure
