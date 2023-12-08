@@ -68,10 +68,15 @@ export class UserController {
   @ApiOkResponse({
     description: 'The user has been successfully signed in',
   })
-  async signin(@Body(new JoiPipe(signinSchema)) data: SigninDto) {
+  async signin(
+    @Body(new JoiPipe(signinSchema)) data: SigninDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     this.logger.log('POST signin-user/', 'access');
 
-    return this.userService.signin(data);
+    const signedUser = await this.userService.signin(data);
+    res.setHeader('Set-Cookie', `auth=${signedUser.token}; HttpOnly; Secure;`);
+    return signedUser;
   }
 
   @Post('/signup')
