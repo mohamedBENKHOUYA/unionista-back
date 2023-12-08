@@ -5,11 +5,12 @@ import {
   JoinColumn,
   ManyToMany,
   ManyToOne,
-  PrimaryColumn,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { VariationModel } from '../variation/variation.model';
 import { ProductItemModel } from '../product-item/product-item.model';
+import { VariationOptionTranslation } from './variation-option-trans.model';
 
 @Entity({ name: 'variation_option' })
 export class VariationOptionModel extends BaseModel {
@@ -18,9 +19,6 @@ export class VariationOptionModel extends BaseModel {
 
   //   @PrimaryColumn({ name: 'id_variation' })
   //   variationId: string;
-
-  @Column()
-  value: string;
 
   @Column({ name: 'variation_id' })
   variationId: string;
@@ -33,4 +31,10 @@ export class VariationOptionModel extends BaseModel {
     (productItem) => productItem.variationOptions,
   )
   productItems: ProductItemModel[];
+
+  @OneToMany(
+    () => VariationOptionTranslation,
+    (variationOptionTranslation) => variationOptionTranslation.variationOption,
+  )
+  translations: VariationOptionTranslation[] | null;
 }

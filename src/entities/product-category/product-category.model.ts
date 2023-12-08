@@ -11,17 +11,12 @@ import {
 import { PromotionModel } from '../promotion/promotion.model';
 import { ProductModel } from '../product/product.model';
 import { VariationModel } from '../variation/variation.model';
+import { ProductCategoryTranslation } from './product-category-trans.model';
 
 @Entity('product_category')
 export class ProductCategoryModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ name: 'category_name' })
-  name: string;
-
-  @Column({ type: 'text', nullable: true })
-  description: string;
 
   @Column({ name: 'image_path', nullable: true })
   imagePath: string;
@@ -52,4 +47,10 @@ export class ProductCategoryModel extends BaseModel {
     (productCategory) => productCategory.parentCategory,
   )
   childCategories: ProductCategoryModel[] | null;
+
+  @OneToMany(
+    () => ProductCategoryTranslation,
+    (productCategoryTranslation) => productCategoryTranslation.productCategory,
+  )
+  translations: ProductCategoryTranslation[] | null;
 }

@@ -20,3 +20,10 @@ export class BaseModel {
   })
   deletedAt: Date | null;
 }
+
+export enum SupportedLocales {
+  EN = 'en',
+  ES = 'es',
+  AR = 'ar',
+  FR = 'fr',
+}

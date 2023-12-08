@@ -1,4 +1,6 @@
 import { registerAs } from '@nestjs/config';
+import { VariationOptionTranslation } from '@src/entities/variation-option/variation-option-trans.model';
+import { VariationOptionModel } from '@src/entities/variation-option/variation-option.model';
 import { join } from 'path';
 import { number, object, string } from 'yup';
 

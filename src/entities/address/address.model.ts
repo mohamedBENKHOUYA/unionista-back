@@ -16,20 +16,14 @@ export class AddressModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'street_number' })
-  streetNumber: string;
-
   @Column({ name: 'address_line1' })
   addressLine1: string;
 
-  @Column({ name: 'address_line2' })
+  @Column({ name: 'address_line2', nullable: true })
   addressLine2: string;
 
   @Column()
   city: string;
-
-  @Column()
-  region: string;
 
   @Column({ name: 'postal_code' })
   postalCode: string;

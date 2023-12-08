@@ -11,17 +11,12 @@ import { ProductCategoryModel } from '../product-category/product-category.model
 import { ProductItemModel } from '../product-item/product-item.model';
 
 import { UserReviewModel } from '../user-review/user-review.model';
+import { ProductTranslation } from './product-trans.model';
 
 @Entity('product')
 export class ProductModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column()
-  name: string;
-
-  @Column({ type: 'text', nullable: true })
-  description: string;
 
   @Column({ name: 'image_path', nullable: true })
   imagePath: string;
@@ -41,4 +36,10 @@ export class ProductModel extends BaseModel {
 
   @OneToMany(() => ProductItemModel, (productItem) => productItem.product)
   productItems: ProductItemModel[] | null;
+
+  @OneToMany(
+    () => ProductTranslation,
+    (productTranslation) => productTranslation.product,
+  )
+  translations: ProductTranslation[] | null;
 }

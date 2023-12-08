@@ -24,43 +24,43 @@ export class UserController {
     console.log();
   }
 
-  @Get('/videos/:id')
-  getVideo(@Res({ passthrough: false }) res: Response, @Req() req: Request) {
-    const id = req.params.id;
-    const filePath = join('/srv/back/src/videos/lmokawil.mp4');
+  // @Get('/videos/:id')
+  // getVideo(@Res({ passthrough: false }) res: Response, @Req() req: Request) {
+  //   const id = req.params.id;
+  //   const filePath = join('/srv/back/src/videos/lmokawil.mp4');
 
-    const stats = fs.statSync(filePath);
+  //   const stats = fs.statSync(filePath);
 
-    const fileSize = stats.size;
-    const range = req.headers.range;
-    if (!range) {
-      const head = {
-        'Content-Length': fileSize,
-        'Content-Type': 'video/mp4',
-      };
-      res.writeHead(200, head);
-      fs.createReadStream(filePath).pipe(res);
-    }
-    const parts = range
-      .replace(/bytes=/, '')
-      .split('-')
-      .map((el) => parseInt(el.trim()));
+  //   const fileSize = stats.size;
+  //   const range = req.headers.range;
+  //   if (!range) {
+  //     const head = {
+  //       'Content-Length': fileSize,
+  //       'Content-Type': 'video/mp4',
+  //     };
+  //     res.writeHead(200, head);
+  //     fs.createReadStream(filePath).pipe(res);
+  //   }
+  //   const parts = range
+  //     .replace(/bytes=/, '')
+  //     .split('-')
+  //     .map((el) => parseInt(el.trim()));
 
-    console.log('range: ', range, 'parts: ', parts, 'fileszi: ', fileSize);
+  //   console.log('range: ', range, 'parts: ', parts, 'fileszi: ', fileSize);
 
-    let [start, end] = parts;
-    end = end || fileSize - 1;
+  //   let [start, end] = parts;
+  //   end = end || fileSize - 1;
 
-    const chunksize = end - start + 1;
-    const head = {
-      'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-      'Accept-Ranges': 'bytes',
-      'Content-Length': chunksize,
-      'Content-Type': 'video/mp4',
-    };
-    res.writeHead(206, head);
-    fs.createReadStream(filePath, { start, end }).pipe(res);
-  }
+  //   const chunksize = end - start + 1;
+  //   const head = {
+  //     'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+  //     'Accept-Ranges': 'bytes',
+  //     'Content-Length': chunksize,
+  //     'Content-Type': 'video/mp4',
+  //   };
+  //   res.writeHead(206, head);
+  //   fs.createReadStream(filePath, { start, end }).pipe(res);
+  // }
 
   @Post('/signin')
   @HttpCode(200)
@@ -91,7 +91,9 @@ export class UserController {
   }
 
   @Post('/signout')
-  signout() {}
+  signout() {
+    console.log('signout');
+  }
 
   @Get()
   @HttpCode(200)

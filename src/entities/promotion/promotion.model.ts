@@ -4,22 +4,16 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  ManyToOne,
-  OneToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ProductCategoryModel } from '../product-category/product-category.model';
+import { PromotionTranslation } from './promotion-trans.model';
 
-@Entity({ name: 'entity' })
+@Entity({ name: 'promotion' })
 export class PromotionModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column()
-  name: string;
-
-  @Column({ type: 'text' })
-  description: string;
 
   @Column({ name: 'discount_rate' })
   discountRate: number;
@@ -36,4 +30,10 @@ export class PromotionModel extends BaseModel {
   )
   @JoinTable({ name: 'promotion_productcategory_relation' })
   productCategories: ProductCategoryModel[];
+
+  @OneToMany(
+    () => PromotionTranslation,
+    (promotionTranslation) => promotionTranslation.promotion,
+  )
+  translations: PromotionTranslation[] | null;
 }
