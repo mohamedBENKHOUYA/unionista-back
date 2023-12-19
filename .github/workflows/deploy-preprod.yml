@@ -33,7 +33,9 @@ jobs:
           echo TYPEORM_DATABASE="$TYPEORM_DATABASE" >> ./.env
           echo TYPEORM_RETRY_ATTEMPTS="$TYPEORM_RETRY_ATTEMPTS" >> ./.env
           echo JWT_ACCESS_KEY="$JWT_ACCESS_KEY" >> ./.env
-          echo JWT_TTL="$JWT_TTL" >> ./.env
+          echo JWT_REFRESH_KEY="$JWT_REFRESH_KEY" >> ./.env
+          echo JWT_ACCESS_TTL="$JWT_ACCESS_TTL" >> ./.env
+          echo JWT_REFRESH_TTL="$JWT_REFRESH_TTL" >> ./.env
           echo JWT_ISSUER="$JWT_ISSUER" >> ./.env
         env:
           PREPROD_PORT: '${{ secrets.PREPROD_PORT }}'
@@ -46,7 +48,9 @@ jobs:
           TYPEORM_DATABASE: '${{ secrets.TYPEORM_DATABASE }}'
           TYPEORM_RETRY_ATTEMPTS: '${{ secrets.TYPEORM_RETRY_ATTEMPTS }}'
           JWT_ACCESS_KEY: '${{ secrets.JWT_ACCESS_KEY }}'
-          JWT_TTL: '${{ secrets.JWT_TTL }}'
+          JWT_REFRESH_KEY: '${{ secrets.JWT_REFRESH_KEY }}'
+          JWT_ACCESS_TTL: '${{ secrets.JWT_ACCESS_TTL }}'
+          JWT_REFRESH_TTL: '${{ secrets.JWT_REFRESH_TTL }}'
           JWT_ISSUER: '${{ secrets.JWT_ISSUER }}'
 
       - name: copy .env file via ssh
