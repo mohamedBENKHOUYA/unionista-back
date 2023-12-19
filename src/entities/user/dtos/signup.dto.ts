@@ -24,5 +24,5 @@ export const signupSchema = object({
   fullName: string().required().min(4),
   email: string().email().required(),
   password: string().required().min(8),
-  phoneNumber: string().optional(),
+  phoneNumber: string(),
 });

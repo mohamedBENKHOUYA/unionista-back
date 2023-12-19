@@ -1,8 +1,8 @@
-import { HttpException, PipeTransform } from '@nestjs/common';
+import { HttpException, HttpStatus, PipeTransform } from '@nestjs/common';
 import { AnySchema } from 'yup';
 import { ValidationError } from 'yup';
 
-export class JoiPipe implements PipeTransform {
+export class YupPipe implements PipeTransform {
   constructor(
     private readonly schema: AnySchema,
     private readonly code = 400,
@@ -10,7 +10,7 @@ export class JoiPipe implements PipeTransform {
 
   async transform(value: unknown): Promise<unknown> {
     try {
-      return this.schema.validate(value);
+      return await this.schema.validate(value);
     } catch (err) {
       if (ValidationError.isError(err)) {
         throw new HttpException(

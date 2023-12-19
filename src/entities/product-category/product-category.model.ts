@@ -21,9 +21,9 @@ export class ProductCategoryModel extends BaseModel {
   @Column({ name: 'image_path', nullable: true })
   imagePath: string;
 
-  @Column({ name: 'parent_category_id' })
+  @Column({ name: 'parent_category_id', nullable: true })
   parentCategoryId: string;
-  @ManyToOne(() => ProductCategoryModel, {})
+  @ManyToOne(() => ProductCategoryModel)
   @JoinColumn({
     name: 'parent_category_id',
   })

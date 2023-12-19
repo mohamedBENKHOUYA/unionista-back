@@ -7,13 +7,18 @@ import {
 import { SigninDto } from './dtos/signin.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './user.model';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { UserNotFoundException } from '@src/exceptions/http-exceptions/UserNotFoundException';
-import { JwtConfig, jwtConfig as jwtConfigEnv } from '@src/config/jwt.config';
+import {
+  JwtConfig,
+  JwtPayload,
+  jwtConfig as jwtConfigEnv,
+} from '@src/config/jwt.config';
 import { sign, verify } from 'jsonwebtoken';
 import { SignupDto } from './dtos/signup.dto';
 import { UserAlreadyExistsException } from '@src/exceptions/http-exceptions/UserAlreadyExistsException';
 import { hash, compareSync, genSalt } from 'bcrypt';
+import { CreateUserDto } from './dtos/create-user.dto';
 
 @Injectable()
 export class UserService {
@@ -26,53 +31,21 @@ export class UserService {
     return this.userRepository.find();
   }
 
-  async signin(data: SigninDto) {
-    const user = await this.userRepository.findOneBy({
-      emailAddress: data.email,
-    });
-    if (!user) {
-      throw new UnauthorizedException();
+  async findOneBy(filters: FindOptionsWhere<UserModel>) {
+    const found = await this.userRepository.findOneBy(filters);
+    if (!found) {
+      throw new UserNotFoundException();
     }
-    if (!compareSync(data.password, user.password)) {
-      throw new UnauthorizedException();
-    }
-    const jwt = this._generateJWT({ email: user.emailAddress, id: user.id });
-    const { password: _, ...newUser } = user;
-    return { user: newUser, token: jwt };
+    return found;
   }
 
-  async signup(data: SignupDto) {
-    const existing = await this.userRepository.findOneBy({
-      emailAddress: data.email,
-    });
-    if (existing) {
-      throw new UserAlreadyExistsException();
-    }
-
+  async create(data: CreateUserDto) {
     const user = this.userRepository.create({
       fullName: data.fullName,
       emailAddress: data.email,
-      password: await hash(data.password, await genSalt(10)),
+      password: await hash(data.password, await genSalt()),
       phoneNumber: data.phoneNumber,
     });
-    await this.userRepository.save(user);
-    const token = this._generateJWT({
-      email: user.emailAddress,
-      id: user.id,
-    });
-    const { password: _, ...newUser } = user;
-    return {
-      user: newUser,
-      token,
-    };
-  }
-
-  private _generateJWT(payload): string {
-    const privateKey = this.jwtConfig.privateKey;
-    return sign({ user: payload }, privateKey, {
-      issuer: this.jwtConfig.issuer,
-      expiresIn: this.jwtConfig.ttl,
-      //   algorithm: 'RS256',
-    });
+    return this.userRepository.save(user);
   }
 }

@@ -1,14 +1,14 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { ProductCategoryModel } from './product-category.model';
-import { SupportedLocales } from '../../shared/base-model';
+import { ESupportedLocales } from '../../shared/paginator/dtos/page-options';
 
 @Entity({ name: 'product_category_translation' })
 export class ProductCategoryTranslation {
   @PrimaryColumn({ name: 'product_category_id' })
   id: string;
 
-  @PrimaryColumn({ name: 'locale', type: 'enum', enum: SupportedLocales })
-  locale: SupportedLocales;
+  @PrimaryColumn({ name: 'locale', type: 'enum', enum: ESupportedLocales })
+  locale: ESupportedLocales;
 
   @Column({ name: 'category_name' })
   name: string;

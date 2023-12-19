@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   HttpCode,
@@ -7,15 +8,18 @@ import {
   Post,
   Req,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
 import { SigninDto, signinSchema } from './dtos/signin.dto';
-import { JoiPipe } from '@src/utils/joi.pipe';
+import { YupPipe } from '@src/utils/joi.pipe';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { UserService } from '@src/entities/user/user.service';
 import { signupSchema, SignupDto } from './dtos/signup.dto';
 import * as fs from 'fs';
 import { Request, Response } from 'express';
 import { join } from 'path';
+import { Serialize } from '@src/shared/interceptors/serialize.interceptor';
+import { UserOutgoingDto } from './dtos/user-outgoing.dto';
 
 @Controller('user')
 export class UserController {
@@ -62,45 +66,14 @@ export class UserController {
   //   fs.createReadStream(filePath, { start, end }).pipe(res);
   // }
 
-  @Post('/signin')
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Sign in' })
-  @ApiOkResponse({
-    description: 'The user has been successfully signed in',
-  })
-  async signin(
-    @Body(new JoiPipe(signinSchema)) data: SigninDto,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    this.logger.log('POST signin-user/', 'access');
 
-    const signedUser = await this.userService.signin(data);
-    res.setHeader('Set-Cookie', `auth=${signedUser.token}; HttpOnly; Secure;`);
-    return signedUser;
-  }
-
-  @Post('/signup')
-  @HttpCode(200)
-  @ApiOperation({ summary: 'Sign up' })
-  @ApiOkResponse({
-    description: 'the user has been successfully signed up',
-  })
-  async signup(@Body(new JoiPipe(signupSchema)) data: SignupDto) {
-    this.logger.log('POST signup-user/', 'access');
-    return this.userService.signup(data);
-  }
-
-  @Post('/signout')
-  signout() {
-    console.log('signout');
-  }
-
-  @Get()
   @HttpCode(200)
   @ApiOperation({ summary: 'list all users' })
   @ApiOkResponse({
     description: 'List all users',
   })
+  @Serialize(UserOutgoingDto)
+  @Get()
   async list() {
     this.logger.log('GET list of users', 'access');
     return this.userService.list();

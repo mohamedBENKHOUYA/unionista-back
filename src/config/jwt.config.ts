@@ -1,26 +1,34 @@
 import { registerAs } from '@nestjs/config';
-import { object, string } from 'yup';
+import { number, object, string } from 'yup';
 
 export interface JwtConfig {
-  privateKey: string;
-  issuer: string;
-  ttl: string | number;
-  hashSalt: string | number;
+  jwtAccessKey: string;
+  jwtRefreshKey: string;
+  jwtIssuer: string;
+  jwtAccessTtl: string;
+  jwtRefreshTtl: string;
+}
+
+export interface JwtPayload {
+  email: string;
+  sub: string;
 }
 
 const jwtSchema = object({
-  JWT_PRIVATE_KEY: string().required(),
-  JWT_TTL: string(),
+  JWT_ACCESS_KEY: string().required(),
+  JWT_REFRESH_KEY: string().required(),
+  JWT_ACCESS_TTL: string(),
+  JWT_REFRESH_TTL: string(),
   JWT_ISSUER: string(),
-  HASH_SALT: string(),
 });
 
-export const jwtConfig = registerAs('jwt', async () => {
+export const jwtConfig = registerAs('jwt', async (): Promise<JwtConfig> => {
   const env = await jwtSchema.validate(process.env);
   return {
-    privateKey: env.JWT_PRIVATE_KEY,
-    ttl: env.JWT_TTL,
-    issuer: env.JWT_ISSUER,
-    hashSalt: env.HASH_SALT,
+    jwtAccessKey: env.JWT_ACCESS_KEY,
+    jwtRefreshKey: env.JWT_REFRESH_KEY,
+    jwtAccessTtl: env.JWT_ACCESS_TTL,
+    jwtRefreshTtl: env.JWT_REFRESH_TTL,
+    jwtIssuer: env.JWT_ISSUER,
   };
 });

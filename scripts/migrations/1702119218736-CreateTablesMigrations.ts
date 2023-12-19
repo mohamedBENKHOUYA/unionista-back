@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreateTablesMigration1702074862807 implements MigrationInterface {
-    name = 'CreateTablesMigration1702074862807'
+export class CreateTablesMigrations1702119218736 implements MigrationInterface {
+    name = 'CreateTablesMigrations1702119218736'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE "admin" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), CONSTRAINT "PK_e032310bcef831fb83101899b10" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "country" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "country_name" character varying NOT NULL, CONSTRAINT "PK_bf6e37c231c4f4ea56dcd887269" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."payment_type_translation_locale_enum" AS ENUM('en', 'es', 'ar', 'fr')`);
         await queryRunner.query(`CREATE TABLE "payment_type_translation" ("payment_type_id" uuid NOT NULL, "locale" "public"."payment_type_translation_locale_enum" NOT NULL, "name" character varying NOT NULL, CONSTRAINT "PK_db67d0ea581de83d6fada60e9f1" PRIMARY KEY ("payment_type_id", "locale"))`);
         await queryRunner.query(`CREATE TABLE "payment_type" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), CONSTRAINT "PK_4f301e328eaf2127773c889ab94" PRIMARY KEY ("id"))`);
@@ -17,7 +17,7 @@ export class CreateTablesMigration1702074862807 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "variation" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "product_category_id" uuid NOT NULL, CONSTRAINT "PK_739a8640e52a196d9df6a31211a" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."product_category_translation_locale_enum" AS ENUM('en', 'es', 'ar', 'fr')`);
         await queryRunner.query(`CREATE TABLE "product_category_translation" ("product_category_id" uuid NOT NULL, "locale" "public"."product_category_translation_locale_enum" NOT NULL, "category_name" character varying NOT NULL, "description" text, CONSTRAINT "PK_572b1038a2573934a5763f30385" PRIMARY KEY ("product_category_id", "locale"))`);
-        await queryRunner.query(`CREATE TABLE "product_category" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "image_path" character varying, "parent_category_id" uuid NOT NULL, CONSTRAINT "PK_0dce9bc93c2d2c399982d04bef1" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "product_category" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "image_path" character varying, "parent_category_id" uuid, CONSTRAINT "PK_0dce9bc93c2d2c399982d04bef1" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TYPE "public"."variation_option_translation_locale_enum" AS ENUM('en', 'es', 'ar', 'fr')`);
         await queryRunner.query(`CREATE TABLE "variation_option_translation" ("variation_option_id" uuid NOT NULL, "locale" "public"."variation_option_translation_locale_enum" NOT NULL, "value" character varying NOT NULL, CONSTRAINT "PK_db824b4b62861ca1313aa4e6e20" PRIMARY KEY ("variation_option_id", "locale"))`);
         await queryRunner.query(`CREATE TABLE "variation_option" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "variation_id" uuid NOT NULL, CONSTRAINT "PK_c625edd870a3d28448c1bf79837" PRIMARY KEY ("id"))`);
@@ -40,7 +40,7 @@ export class CreateTablesMigration1702074862807 implements MigrationInterface {
         await queryRunner.query(`CREATE TABLE "order_status" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), CONSTRAINT "PK_8ea75b2a26f83f3bc98b9c6aaf6" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "shop_order" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "order_date" TIMESTAMP NOT NULL, "order_total" integer NOT NULL, "user_id" uuid, "user_payment_method_id" uuid NOT NULL, "shipping_address_id" uuid NOT NULL, "shopping_method_id" uuid NOT NULL, "order_status_id" uuid NOT NULL, CONSTRAINT "PK_aff7956a99be3a90c1075744b6a" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "address" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "address_line1" character varying NOT NULL, "address_line2" character varying, "city" character varying NOT NULL, "postal_code" character varying NOT NULL, "country_id" uuid NOT NULL, CONSTRAINT "PK_d92de1f82754668b5f5f5dd4fd5" PRIMARY KEY ("id"))`);
-        await queryRunner.query(`CREATE TABLE "country" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), "country_name" character varying NOT NULL, CONSTRAINT "PK_bf6e37c231c4f4ea56dcd887269" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "admin" ("created_at" TIMESTAMP NOT NULL DEFAULT now(), "updated_at" TIMESTAMP NOT NULL DEFAULT now(), "deleted_at" TIMESTAMP, "id" uuid NOT NULL DEFAULT uuid_generate_v4(), CONSTRAINT "PK_e032310bcef831fb83101899b10" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "promotion_productcategory_relation" ("promotionId" uuid NOT NULL, "productCategoryId" uuid NOT NULL, CONSTRAINT "PK_a6714ef1e8fdc70328b9ab9044b" PRIMARY KEY ("promotionId", "productCategoryId"))`);
         await queryRunner.query(`CREATE INDEX "IDX_7124e85a20182796b40934a08a" ON "promotion_productcategory_relation" ("promotionId") `);
         await queryRunner.query(`CREATE INDEX "IDX_a5ffd3f6989e871150ddce6910" ON "promotion_productcategory_relation" ("productCategoryId") `);
@@ -124,7 +124,7 @@ export class CreateTablesMigration1702074862807 implements MigrationInterface {
         await queryRunner.query(`DROP INDEX "public"."IDX_a5ffd3f6989e871150ddce6910"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_7124e85a20182796b40934a08a"`);
         await queryRunner.query(`DROP TABLE "promotion_productcategory_relation"`);
-        await queryRunner.query(`DROP TABLE "country"`);
+        await queryRunner.query(`DROP TABLE "admin"`);
         await queryRunner.query(`DROP TABLE "address"`);
         await queryRunner.query(`DROP TABLE "shop_order"`);
         await queryRunner.query(`DROP TABLE "order_status"`);
@@ -160,7 +160,7 @@ export class CreateTablesMigration1702074862807 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "payment_type"`);
         await queryRunner.query(`DROP TABLE "payment_type_translation"`);
         await queryRunner.query(`DROP TYPE "public"."payment_type_translation_locale_enum"`);
-        await queryRunner.query(`DROP TABLE "admin"`);
+        await queryRunner.query(`DROP TABLE "country"`);
     }
 
 }

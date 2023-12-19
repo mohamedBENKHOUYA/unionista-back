@@ -1,14 +1,14 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { VariationModel } from './variation.model';
-import { SupportedLocales } from '../../shared/base-model';
+import { ESupportedLocales } from '../../shared/paginator/dtos/page-options';
 
 @Entity({ name: 'variation_translation' })
 export class VariationTranslation {
   @PrimaryColumn({ name: 'variation_id' })
   id: string;
 
-  @PrimaryColumn({ name: 'locale', type: 'enum', enum: SupportedLocales })
-  locale: SupportedLocales;
+  @PrimaryColumn({ name: 'locale', type: 'enum', enum: ESupportedLocales })
+  locale: ESupportedLocales;
 
   @Column()
   name: string;

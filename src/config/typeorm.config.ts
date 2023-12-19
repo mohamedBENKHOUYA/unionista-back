@@ -10,7 +10,7 @@ const typeormConfigSchema = object({
   TYPEORM_PASSWORD: string().required(),
   TYPEORM_DATABASE: string().required(),
   TYPEORM_PORT: number().required(),
-  TYPEORM_RETRY_ATTEMPTS: number().positive().optional(),
+  TYPEORM_RETRY_ATTEMPTS: number().positive(),
 });
 
 export const typeormConfig = registerAs('back_db', async function () {

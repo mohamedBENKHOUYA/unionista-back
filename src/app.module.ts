@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductCategoryModule } from './entities/product-category/product-category.module';
 import { UserModule } from './entities/user/user.module';
 import { jwtConfig } from './config/jwt.config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { jwtConfig } from './config/jwt.config';
     }),
     ProductCategoryModule,
     UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

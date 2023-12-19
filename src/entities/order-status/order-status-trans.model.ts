@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { OrderStatusModel } from './order-status.model';
-import { SupportedLocales } from '../../shared/base-model';
+import { ESupportedLocales } from '../../shared/paginator/dtos/page-options';
 
 enum OrderStatus {
   PENDING = 'pending',
@@ -19,8 +19,8 @@ export class OrderStatusTranslation {
   @PrimaryColumn({ name: 'order_status_id' })
   id: string;
 
-  @PrimaryColumn({ name: 'locale', type: 'enum', enum: SupportedLocales })
-  locale: SupportedLocales;
+  @PrimaryColumn({ name: 'locale', type: 'enum', enum: ESupportedLocales })
+  locale: ESupportedLocales;
 
   @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;

@@ -1,19 +1,10 @@
 import { BaseModel } from '../../shared/base-model';
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  JoinTable,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { AddressModel } from '../address/address.model';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserPaymentMethodModel } from '../user-payment-method/user-payment-method.model';
 import { ShopOrderModel } from '../shop-order/shop-order.model';
 import { UserReviewModel } from '../user-review/user-review.model';
 import { UserAddressRelationModel } from '../user-address-relation/user-address-relation.model';
+import { Exclude } from 'class-transformer';
 
 @Entity('user')
 export class UserModel extends BaseModel {
@@ -26,6 +17,7 @@ export class UserModel extends BaseModel {
   @Column({ name: 'email_address' })
   emailAddress: string;
 
+  @Exclude()
   @Column()
   password: string;
 
