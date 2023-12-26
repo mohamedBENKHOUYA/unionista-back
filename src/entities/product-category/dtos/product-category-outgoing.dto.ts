@@ -16,5 +16,5 @@ export class ProductCategoryOutoingDto {
     return !!obj.childCategories.length;
   })
   @Expose()
-  hasChilds: boolean;
+  hasChildren: boolean;
 }
