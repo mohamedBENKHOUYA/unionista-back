@@ -31,7 +31,6 @@ export class ProductCategoryController {
 
   @UseInterceptors(new ParseInterceptor())
   @Serialize(ProductCategoryOutoingDto)
-  @UseGuards(JwtAccessGuard)
   @Get()
   @ApiOkResponse({
     type: ProductCategoryModel,
