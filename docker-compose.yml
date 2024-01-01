@@ -39,6 +39,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=back_db
+    profiles:
+      - static
     networks:
       - unionistashop_network
 
