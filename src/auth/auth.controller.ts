@@ -6,7 +6,9 @@ import {
   Logger,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiOkResponse } from '@nestjs/swagger';
 import { SigninDto, signinSchema } from '@src/entities/user/dtos/signin.dto';
@@ -19,8 +21,9 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { JwtAccessGuard } from './guards/jwt-access.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { Request } from 'express';
+import { Request, Express } from 'express';
 import { UserModel } from '@src/entities/user/user.model';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('auth')
 export class AuthController {
@@ -48,8 +51,14 @@ export class AuthController {
   })
   @Serialize(UserOutgoingDto)
   @Post('/signup')
-  async signup(@Body(new YupPipe(signupSchema)) data: SignupDto) {
+  @UseInterceptors(FileInterceptor('avatarFile'))
+  async signup(
+    @Body(new YupPipe(signupSchema)) data: SignupDto,
+    @UploadedFile() userAvatarFile: Express.Multer.File,
+  ) {
     this.logger.log('POST signup-user/', 'access');
+    data.userAvatarFile = userAvatarFile;
+    console.log('user avatar filevatar: ', userAvatarFile);
     return this.authService.signup(data);
   }
 

@@ -19,6 +19,7 @@ import {
 import { UserService } from '@src/entities/user/user.service';
 import { CreateUserDto } from '@src/entities/user/dtos/create-user.dto';
 import { UserNotFoundException } from '@src/exceptions/http-exceptions/UserNotFoundException';
+import { join } from 'path';
 
 export class AuthService {
   constructor(

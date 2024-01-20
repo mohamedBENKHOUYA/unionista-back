@@ -19,6 +19,7 @@ import { SignupDto } from './dtos/signup.dto';
 import { UserAlreadyExistsException } from '@src/exceptions/http-exceptions/UserAlreadyExistsException';
 import { hash, compareSync, genSalt } from 'bcrypt';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { join } from 'path';
 
 @Injectable()
 export class UserService {
@@ -46,6 +47,11 @@ export class UserService {
       password: await hash(data.password, await genSalt()),
       phoneNumber: data.phoneNumber,
     });
+    user.avatarPath = join(
+      '../../..',
+      'files',
+      data.userAvatarFile.originalname,
+    );
     return this.userRepository.save(user);
   }
 }

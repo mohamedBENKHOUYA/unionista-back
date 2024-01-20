@@ -3,4 +3,5 @@ export class CreateUserDto {
   email: string;
   password: string;
   phoneNumber: string;
+  userAvatarFile: Express.Multer.File | null;
 }

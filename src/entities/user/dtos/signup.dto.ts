@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { object, string } from 'yup';
+import { Express } from 'express';
 
 export class SignupDto {
   @ApiProperty({
@@ -18,6 +19,9 @@ export class SignupDto {
 
   @ApiProperty({ nullable: true, description: 'User phone number' })
   phoneNumber?: string;
+
+  @ApiProperty({ nullable: true, description: 'User profile avatar' })
+  userAvatarFile: Express.Multer.File | null;
 }
 
 export const signupSchema = object({

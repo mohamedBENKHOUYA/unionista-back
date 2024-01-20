@@ -24,6 +24,9 @@ export class UserModel extends BaseModel {
   @Column({ name: 'phone_number', nullable: true })
   phoneNumber: string;
 
+  @Column({ name: 'avatar_path', nullable: true })
+  avatarPath: string | null;
+
   @OneToMany(
     () => UserAddressRelationModel,
     (userAddressRelation) => userAddressRelation.user,

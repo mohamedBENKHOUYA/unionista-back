@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Logger,
+  Param,
   Post,
   Req,
   Res,
@@ -20,8 +21,9 @@ import { Request, Response } from 'express';
 import { join } from 'path';
 import { Serialize } from '@src/shared/interceptors/serialize.interceptor';
 import { UserOutgoingDto } from './dtos/user-outgoing.dto';
+import { UserModel } from './user.model';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
   private readonly logger = new Logger('user');
   constructor(private userService: UserService) {
@@ -66,9 +68,8 @@ export class UserController {
   //   fs.createReadStream(filePath, { start, end }).pipe(res);
   // }
 
-
   @HttpCode(200)
-  @ApiOperation({ summary: 'list all users' })
+  @ApiOperation({ summary: 'List all users' })
   @ApiOkResponse({
     description: 'List all users',
   })
@@ -77,5 +78,16 @@ export class UserController {
   async list() {
     this.logger.log('GET list of users', 'access');
     return this.userService.list();
+  }
+
+  @HttpCode(200)
+  @ApiOperation({ summary: 'Get one user by id' })
+  @ApiOkResponse({
+    description: 'One user',
+  })
+  @Get(':id')
+  async findUserById(@Param('id') id: string): Promise<UserModel> {
+    this.logger.log('GET one user by id', 'access');
+    return this.userService.findOneBy({ id: id });
   }
 }
