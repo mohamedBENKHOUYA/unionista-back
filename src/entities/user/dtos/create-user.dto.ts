@@ -1,3 +1,5 @@
+import { Express } from 'express';
+
 export class CreateUserDto {
   fullName: string;
   email: string;
