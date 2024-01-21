@@ -15,5 +15,5 @@ if [ -z $(docker ps --filter name=postgres --format="{{ .Names }}") ] ; then
      docker compose --file /srv/back/current/docker-compose.yml down --remove-orphans
      docker compose --file /srv/back/current/docker-compose.yml --profile static up --build
 else 
-     docker compose --file /srv/back/current/docker-compose.yml up
+     docker compose --file /srv/back/current/docker-compose.yml up --build
 fi

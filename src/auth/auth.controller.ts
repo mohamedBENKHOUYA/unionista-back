@@ -22,7 +22,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { JwtAccessGuard } from './guards/jwt-access.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
 import { Request, Express } from 'express';
-import { Multer } from 'multer';
 import { UserModel } from '@src/entities/user/user.model';
 import { FileInterceptor } from '@nestjs/platform-express';
 
