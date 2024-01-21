@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { object, string } from 'yup';
 import { Express } from 'express';
+import { Multer } from 'multer';
 
 export class SignupDto {
   @ApiProperty({

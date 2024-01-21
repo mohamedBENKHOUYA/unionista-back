@@ -1,4 +1,5 @@
 import { Express } from 'express';
+import { Multer } from 'multer';
 
 export class CreateUserDto {
   fullName: string;
