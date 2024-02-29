@@ -55,7 +55,9 @@ jobs:
 
 
       - name: build project
-        run: npm run build
+        run: |
+          npm i
+          npm run build
 
       - name: build back image
         run: docker build -t mo29172/unionista_back -f ./docker/back/Dockerfile ./
