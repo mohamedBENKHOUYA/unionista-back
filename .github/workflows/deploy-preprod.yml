@@ -54,12 +54,15 @@ jobs:
           JWT_ISSUER: '${{ secrets.JWT_ISSUER }}'
 
 
+      - name: build project
+        run: npm run build
+
       - name: build back image
         run: docker build -t mo29172/unionista_back -f ./docker/back/Dockerfile ./
       
       - name: send image to docker hub
         run: |
-          docker login -u  ${{ secrets.DOCKER_HUB_USERNAME }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
+          docker login -u  ${{ secrets.f }} -p ${{ secrets.DOCKER_HUB_PASSWORD }}
           docker push mo29172/unionista_back:latest
 
       # - name: copy .env file via ssh
