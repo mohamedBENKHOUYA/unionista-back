@@ -69,9 +69,16 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
       
-      - name: send image to docker hub
+      - name: send back image to docker hub
         run: |
           docker push mo29172/unionista_back:latest
+
+      - name: build nginx image
+        run: |
+          docker build -t mo29172/unionista_nginx -f ./docker/nginx/Dockerfile ./
+      - name: send nginx image to docker hub
+        run: |
+          docker push mo29172/unionista_nginx:latest
 
       # - name: copy .env file via ssh
       #   uses: appleboy/scp-action@master
