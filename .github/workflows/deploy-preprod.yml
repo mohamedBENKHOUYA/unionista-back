@@ -87,7 +87,7 @@ jobs:
           username: ${{ secrets.PREPROD_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
           # password: ${{ secrets.PREPROD_PASSWORD }}
-          source: 'nginx-node-port.yaml,nginx-pod.yaml'
+          source: 'docker/k8s/ginx-node-port.yaml,docker/k8s/nginx-pod.yaml'
           target: '/srv/k8s'
 
       # - name: Install PM2
