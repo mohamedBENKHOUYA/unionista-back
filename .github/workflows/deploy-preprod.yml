@@ -86,7 +86,7 @@ jobs:
           host: ${{ secrets.PREPROD_HOST }}
           username: ${{ secrets.PREPROD_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
-          source: 'docker/k8s/nginx-node-port.yaml,docker/k8s/nginx-pod.yaml'
+          source: 'docker/k8s/nginx-node-port.yaml,docker/k8s/nginx-deployment.yaml'
           target: '/srv/k8s'
           strip_components: 2
 
@@ -97,7 +97,7 @@ jobs:
           username: ${{ secrets.SSH_SECOND_USER }}
           password: ${{ secrets.PREPROD_PASSWORD }}
           script: |
-            kubectl apply -f /srv/k8s/nginx-pod.yaml
+            kubectl apply -f /srv/k8s/nginx-deployment.yaml
             kubectl apply -f /srv/k8s/nginx-node-port.yaml
 
 
