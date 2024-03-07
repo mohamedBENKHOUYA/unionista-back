@@ -80,15 +80,15 @@ jobs:
         run: |
           docker push mo29172/unionista_nginx:latest
 
-      # - name: copy .env file via ssh
-      #   uses: appleboy/scp-action@master
-      #   with:
-      #     host: ${{ secrets.PREPROD_HOST }}
-      #     username: ${{ secrets.PREPROD_USER }}
-      #     key: ${{ secrets.PREPROD_SSH_KEY }}
-      #     # password: ${{ secrets.PREPROD_PASSWORD }}
-      #     source: '.env'
-      #     target: '/srv/back/source'
+      - name: copy k8s files via ssh
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.PREPROD_HOST }}
+          username: ${{ secrets.PREPROD_USER }}
+          key: ${{ secrets.PREPROD_SSH_KEY }}
+          # password: ${{ secrets.PREPROD_PASSWORD }}
+          source: 'nginx-node-port.yaml,nginx-pod.yaml'
+          target: '/srv/k8s'
 
       # - name: Install PM2
       #   run: npm i pm2 --force
