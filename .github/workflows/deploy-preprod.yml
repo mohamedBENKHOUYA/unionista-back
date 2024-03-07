@@ -90,6 +90,8 @@ jobs:
           source: 'docker/k8s/nginx-node-port.yaml,docker/k8s/nginx-pod.yaml'
           target: '/srv/k8s'
           strip_components: 2
+          script: |
+            kubectl apply -f nginx-pod.yaml
 
       # - name: Install PM2
       #   run: npm i pm2 --force
