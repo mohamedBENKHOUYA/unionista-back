@@ -54,31 +54,40 @@ jobs:
           JWT_ISSUER: '${{ secrets.JWT_ISSUER }}'
 
 
-      - name: build project
+      - name: build back
         run: |
           npm i
           npm run build
 
-      - name: build back image
-        run: docker build -t mo29172/unionista_back -f ./docker/back/Dockerfile ./
-
-      
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-      
-      - name: send back image to docker hub
+
+      - name: build back image
+        run: docker build -t mo29172/unionista_back:v${{ github.run_number }} -f docker/back/Dockerfile .
+      - name: push back image to docker hub
         run: |
-          docker push mo29172/unionista_back:latest
+          docker push mo29172/unionista_back:v${{ github.run_number }}
+
 
       - name: build nginx image
         run: |
-          docker build -t mo29172/unionista_nginx -f ./docker/nginx/Dockerfile ./
-      - name: send nginx image to docker hub
+          docker build -t mo29172/unionista_nginx:v${{ github.run_number }} -f docker/nginx/Dockerfile .
+      - name: push nginx image to docker hub
         run: |
-          docker push mo29172/unionista_nginx:latest
+          docker push mo29172/unionista_nginx:v${{ github.run_number }}
+
+          
+
+      - name: update nginx deployment file version
+        run: |
+          sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/k8s/nginx-deployment.yaml
+
+      - name: update back deployment file version
+        run: |
+          sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/k8s/back-deployment.yaml
 
       - name: copy k8s files via ssh
         uses: appleboy/scp-action@master
@@ -86,7 +95,7 @@ jobs:
           host: ${{ secrets.PREPROD_HOST }}
           username: ${{ secrets.PREPROD_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
-          source: 'docker/k8s/nginx-node-port.yaml,docker/k8s/nginx-deployment.yaml'
+          source: 'docker/k8s/nginx-node-port.yaml,docker/k8s/nginx-deployment.yaml,docker/k8s/back-deployment.yaml,docker/k8s/db-deployment.yaml'
           target: '/srv/k8s'
           strip_components: 2
 
@@ -98,6 +107,8 @@ jobs:
           password: ${{ secrets.PREPROD_PASSWORD }}
           script: |
             kubectl apply -f /srv/k8s/nginx-deployment.yaml
+            kubectl apply -f /srv/k8s/back-deployment.yaml
+            kubectl apply -f /srv/k8s/db-deployment.yaml
             kubectl apply -f /srv/k8s/nginx-node-port.yaml
 
 
