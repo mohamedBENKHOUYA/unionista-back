@@ -91,7 +91,17 @@ jobs:
           target: '/srv/k8s'
           strip_components: 2
           script: |
-            kubectl apply -f nginx-pod.yaml
+            kubectl apply -f /srv/k8s/nginx-pod.yaml
+
+      - name: apply k8s files
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.PREPROD_HOST }}
+          username: ${{ secrets.PREPROD_USER }}
+          key: ${{ secrets.PREPROD_SSH_KEY }}
+          # password: ${{ secrets.PREPROD_PASSWORD }}
+          script: |
+            kubectl apply -f /srv/k8s/nginx-pod.yaml
 
       # - name: Install PM2
       #   run: npm i pm2 --force
