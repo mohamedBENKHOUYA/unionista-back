@@ -6,7 +6,7 @@ metadata:
     component: web
 spec:
   containers:
-    - name: nginx_cont
+    - name: nginx-cont
       image: mo29172/unionista_nginx
       ports:
         - containerPort: 3000

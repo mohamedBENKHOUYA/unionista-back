@@ -86,22 +86,20 @@ jobs:
           host: ${{ secrets.PREPROD_HOST }}
           username: ${{ secrets.PREPROD_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
-          # password: ${{ secrets.PREPROD_PASSWORD }}
           source: 'docker/k8s/nginx-node-port.yaml,docker/k8s/nginx-pod.yaml'
           target: '/srv/k8s'
           strip_components: 2
-          script: |
-            kubectl apply -f /srv/k8s/nginx-pod.yaml
 
       - name: apply k8s files
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.PREPROD_HOST }}
-          username: ${{ secrets.PREPROD_USER }}
-          key: ${{ secrets.PREPROD_SSH_KEY }}
-          # password: ${{ secrets.PREPROD_PASSWORD }}
+          username: ${{ secrets.SSH_SECOND_USER }}
+          password: ${{ secrets.PREPROD_PASSWORD }}
           script: |
             kubectl apply -f /srv/k8s/nginx-pod.yaml
+            kubectl apply -f /srv/k8s/nginx-node-port.yaml
+
 
       # - name: Install PM2
       #   run: npm i pm2 --force
