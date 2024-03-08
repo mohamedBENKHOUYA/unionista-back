@@ -12,6 +12,10 @@ spec:
       labels:
         component: back_db
     spec:
+      volumes:
+        - name: db-storage
+          persistentVolumeClaim:
+            claimName: db-persistent-volume-claim
       containers:
         - name: db-container
           image: postgres:14-alpine
@@ -24,5 +28,8 @@ spec:
               value: postgres
             - name: POSTGRES_DB
               value: back_db
-
+          volumeMounts:
+            - name: db-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: db
   

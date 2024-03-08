@@ -95,7 +95,7 @@ jobs:
           host: ${{ secrets.PREPROD_HOST }}
           username: ${{ secrets.PREPROD_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
-          source: 'docker/k8s/nginx-node-port.yaml,docker/k8s/nginx-deployment.yaml,docker/k8s/back-deployment.yaml,docker/k8s/db-deployment.yaml,docker/k8s/db-cluster-ip-service.yaml,docker/k8s/back-cluster-ip-service.yaml'
+          source: 'docker/k8s/nginx-node-port.yaml,docker/k8s/nginx-deployment.yaml,docker/k8s/back-deployment.yaml,docker/k8s/db-deployment.yaml,docker/k8s/db-cluster-ip-service.yaml,docker/k8s/back-cluster-ip-service.yaml,docker/k8s/db-persistent-volume-claim.yaml'
           target: '/srv/k8s'
           strip_components: 2
 
