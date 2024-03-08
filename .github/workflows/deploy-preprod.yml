@@ -59,8 +59,8 @@ jobs:
           host: ${{ secrets.PREPROD_HOST }}
           username: ${{ secrets.PREPROD_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
-          source: 'docker/k8s/nginx-node-port.yaml,docker/k8s/nginx-deployment.yaml,docker/k8s/back-deployment.yaml,docker/k8s/db-deployment.yaml,docker/k8s/db-cluster-ip-service.yaml,docker/k8s/back-cluster-ip-service.yaml,docker/k8s/db-persistent-volume-claim.yaml'
-          target: '/srv/k8s'
+          source: 'docker/k8s/back-deployment.yaml,docker/k8s/db-deployment.yaml,docker/k8s/db-cluster-ip-service.yaml,docker/k8s/back-cluster-ip-service.yaml,docker/k8s/back-ingress-service.yaml,docker/k8s/db-persistent-volume-claim.yaml'
+          target: '/srv/k8s/back'
           strip_components: 2
 
       - name: apply k8s files
@@ -85,7 +85,7 @@ jobs:
             --from-literal JWT_ACCESS_TTL=${{ secrets.JWT_ACCESS_TTL }} \
             --from-literal JWT_REFRESH_TTL=${{ secrets.JWT_REFRESH_TTL }} \
             --from-literal JWT_ISSUER=${{ secrets.JWT_ISSUER }}
-            kubectl apply -f /srv/k8s
+            kubectl apply -f /srv/k8s/back
 
       # - name: Install PM2
       #   run: npm i pm2 --force

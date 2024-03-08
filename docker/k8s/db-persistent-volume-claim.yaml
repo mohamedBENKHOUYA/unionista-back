@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: db-persitent-volume-claim
+  name: db-persistent-volume-claim
 
 spec:
   accessModes:
@@ -10,4 +10,3 @@ spec:
     requests:
       storage: 2Gi
 
-      
