@@ -15,7 +15,7 @@ async function bootstrap() {
     password: process.env.TYPEORM_PASSWORD,
     database: process.env.TYPEORM_DATABASE,
     entities: ['src/**/*.model.ts'],
-    migrations: ['dist/scripts/migrations/*'],
+    migrations: ['scripts/migrations/*'],
     logging: true,
   });
   await connection.runMigrations({
