@@ -21,43 +21,6 @@ jobs:
           PREPROD_SSH_KEY: ${{secrets.PREPROD_SSH_KEY}}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
 
-      - name: Export environment variables
-        run: |
-          echo PREPROD_PORT="$PREPROD_PORT" > ./.env
-          echo NGINX_STATIC_LOCATION="$NGINX_STATIC_LOCATION" >> ./.env
-          echo NEST_START_CMD="$NEST_START_CMD" >> ./.env
-          echo TYPEORM_HOST="$TYPEORM_HOST" >> ./.env
-          echo TYPEORM_PORT="$TYPEORM_PORT" >> ./.env
-          echo TYPEORM_USERNAME="$TYPEORM_USERNAME" >> ./.env
-          echo TYPEORM_PASSWORD="$TYPEORM_PASSWORD" >> ./.env
-          echo TYPEORM_DATABASE="$TYPEORM_DATABASE" >> ./.env
-          echo TYPEORM_RETRY_ATTEMPTS="$TYPEORM_RETRY_ATTEMPTS" >> ./.env
-          echo JWT_ACCESS_KEY="$JWT_ACCESS_KEY" >> ./.env
-          echo JWT_REFRESH_KEY="$JWT_REFRESH_KEY" >> ./.env
-          echo JWT_ACCESS_TTL="$JWT_ACCESS_TTL" >> ./.env
-          echo JWT_REFRESH_TTL="$JWT_REFRESH_TTL" >> ./.env
-          echo JWT_ISSUER="$JWT_ISSUER" >> ./.env
-        env:
-          PREPROD_PORT: '${{ secrets.PREPROD_PORT }}'
-          NGINX_STATIC_LOCATION: '${{ secrets.NGINX_STATIC_LOCATION }}'
-          NEST_START_CMD: '${{ secrets.NEST_START_CMD }}'
-          TYPEORM_HOST: '${{ secrets.TYPEORM_HOST }}'
-          TYPEORM_PORT: '${{ secrets.TYPEORM_PORT }}'
-          TYPEORM_USERNAME: '${{ secrets.TYPEORM_USERNAME }}'
-          TYPEORM_PASSWORD: '${{ secrets.TYPEORM_PASSWORD }}'
-          TYPEORM_DATABASE: '${{ secrets.TYPEORM_DATABASE }}'
-          TYPEORM_RETRY_ATTEMPTS: '${{ secrets.TYPEORM_RETRY_ATTEMPTS }}'
-          JWT_ACCESS_KEY: '${{ secrets.JWT_ACCESS_KEY }}'
-          JWT_REFRESH_KEY: '${{ secrets.JWT_REFRESH_KEY }}'
-          JWT_ACCESS_TTL: '${{ secrets.JWT_ACCESS_TTL }}'
-          JWT_REFRESH_TTL: '${{ secrets.JWT_REFRESH_TTL }}'
-          JWT_ISSUER: '${{ secrets.JWT_ISSUER }}'
-
-
-      - name: build back
-        run: |
-          npm i
-          npm run build
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
@@ -65,11 +28,18 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
+      - name: build back
+        run: |
+          npm i
+          npm run build
       - name: build back image
         run: docker build -t mo29172/unionista_back:v${{ github.run_number }} -f docker/back/Dockerfile .
       - name: push back image to docker hub
         run: |
           docker push mo29172/unionista_back:v${{ github.run_number }}
+      - name: update back deployment file version
+        run: |
+          sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/k8s/back-deployment.yaml
 
 
       - name: build nginx image
@@ -78,16 +48,10 @@ jobs:
       - name: push nginx image to docker hub
         run: |
           docker push mo29172/unionista_nginx:v${{ github.run_number }}
-
-          
-
       - name: update nginx deployment file version
         run: |
           sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/k8s/nginx-deployment.yaml
 
-      - name: update back deployment file version
-        run: |
-          sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/k8s/back-deployment.yaml
 
       - name: copy k8s files via ssh
         uses: appleboy/scp-action@master
@@ -106,8 +70,22 @@ jobs:
           username: ${{ secrets.SSH_SECOND_USER }}
           password: ${{ secrets.PREPROD_PASSWORD }}
           script: |
+            kubectl create secret generic back-envs \
+            --from-literal PREPROD_PORT=${{ secrets.PREPROD_PORT }} \
+            --from-literal NGINX_STATIC_LOCATION=${{ secrets.NGINX_STATIC_LOCATION }} \
+            --from-literal NEST_START_CMD=${{ secrets.NEST_START_CMD }} \
+            --from-literal TYPEORM_HOST=${{ secrets.TYPEORM_HOST }} \
+            --from-literal TYPEORM_PORT=${{ secrets.TYPEORM_PORT }} \
+            --from-literal TYPEORM_USERNAME=${{ secrets.TYPEORM_USERNAME }} \
+            --from-literal TYPEORM_PASSWORD=${{ secrets.TYPEORM_PASSWORD }} \
+            --from-literal TYPEORM_DATABASE=${{ secrets.TYPEORM_DATABASE }} \
+            --from-literal TYPEORM_RETRY_ATTEMPTS=${{ secrets.TYPEORM_RETRY_ATTEMPTS }} \
+            --from-literal JWT_ACCESS_KEY=${{ secrets.JWT_ACCESS_KEY }} \
+            --from-literal JWT_REFRESH_KEY=${{ secrets.JWT_REFRESH_KEY }} \
+            --from-literal JWT_ACCESS_TTL=${{ secrets.JWT_ACCESS_TTL }} \
+            --from-literal JWT_REFRESH_TTL=${{ secrets.JWT_REFRESH_TTL }} \
+            --from-literal JWT_ISSUER=${{ secrets.JWT_ISSUER }}
             kubectl apply -f /srv/k8s
-
 
       # - name: Install PM2
       #   run: npm i pm2 --force

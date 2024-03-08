@@ -13,8 +13,6 @@ USER node:node
 COPY package.json ./
 RUN npm i 
 ADD dist/ ./dist
-COPY .env .
-
 
 
 EXPOSE 3000

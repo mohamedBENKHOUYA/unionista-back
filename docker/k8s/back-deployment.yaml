@@ -17,4 +17,75 @@ spec:
           image: mo29172/unionista_back:latest
           ports:
             - containerPort: 3000
+          env:
+            - name: PREPROD_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: PREPROD_PORT 
+            - name: NGINX_STATIC_LOCATION
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: NGINX_STATIC_LOCATION  
+            - name: NEST_START_CMD
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: NEST_START_CMD  
+            - name: TYPEORM_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: TYPEORM_HOST  
+            - name: TYPEORM_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: TYPEORM_PORT  
+            - name: TYPEORM_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: TYPEORM_USERNAME  
+            - name: TYPEORM_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: TYPEORM_PASSWORD  
+            - name: TYPEORM_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: TYPEORM_DATABASE  
+            - name: TYPEORM_RETRY_ATTEMPTS
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: TYPEORM_RETRY_ATTEMPTS  
+            - name: JWT_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: JWT_ACCESS_KEY  
+            - name: JWT_REFRESH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: JWT_REFRESH_KEY  
+            - name: JWT_ACCESS_TTL
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: JWT_ACCESS_TTL  
+            - name: JWT_REFRESH_TTL
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: JWT_REFRESH_TTL  
+            - name: JWT_ISSUER
+              valueFrom:
+                secretKeyRef:
+                  name: back-envs
+                  key: JWT_ISSUER  
             
