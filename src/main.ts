@@ -1,26 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { createConnection } from 'typeorm';
+import DataSource from './datasource';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   await app.listen(process.env.BACK_PORT || 3000);
 
-  const connection = await createConnection({
-    type: 'postgres',
-    host: process.env.TYPEORM_HOST || 'localhost',
-    port: parseInt(process.env.TYPEORM_PORT),
-    username: process.env.TYPEORM_USERNAME,
-    password: process.env.TYPEORM_PASSWORD,
-    database: process.env.TYPEORM_DATABASE,
-    entities: ['src/**/*.model.ts'],
-    migrations: ['scripts/migrations/*'],
-    logging: true,
-  });
-  await connection.runMigrations({
-    transaction: 'all'
-  });
-  await connection.close();
+  // Run migrations 
+  await DataSource.initialize()
+  .catch((err) => Logger.error(`Error during DataSource initalization: ${err}`));
+  await DataSource.runMigrations({transaction: 'all'})
+  .then((res) => Logger.debug(`Successfully executed pending migrations: ${res}`))
+  .catch((err) => Logger.error(`Error while executing pending migrations: ${err}`));
 }
 bootstrap();
