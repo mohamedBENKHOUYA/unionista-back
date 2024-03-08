@@ -6,11 +6,11 @@ spec:
   replicas: 1
   selector: 
     matchLabels:
-      component: back_db
+      component: back-db
   template:
     metadata:
       labels:
-        component: back_db
+        component: back-db
     spec:
       containers:
         - name: db-container

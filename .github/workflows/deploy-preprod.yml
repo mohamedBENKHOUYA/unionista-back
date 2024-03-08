@@ -106,11 +106,7 @@ jobs:
           username: ${{ secrets.SSH_SECOND_USER }}
           password: ${{ secrets.PREPROD_PASSWORD }}
           script: |
-            kubectl apply -f /srv/k8s/nginx-deployment.yaml
-            kubectl apply -f /srv/k8s/back-deployment.yaml
-            kubectl apply -f /srv/k8s/db-deployment.yaml
-            kubectl apply -f /srv/k8s/nginx-node-port.yaml
-            kubectl apply -f /srv/k8s/db-cluster-ip-service.yaml
+            kubectl apply -f /srv/k8s
 
 
       # - name: Install PM2

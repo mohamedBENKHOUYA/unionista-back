@@ -5,7 +5,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    component: back_db
+    component: back-db
   ports:
     - port: 5432
       targetPort: 5432
