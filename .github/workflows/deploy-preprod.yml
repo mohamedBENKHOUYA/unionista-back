@@ -48,9 +48,9 @@ jobs:
       - name: push nginx image to docker hub
         run: |
           docker push mo29172/unionista_nginx:v${{ github.run_number }}
-      - name: update nginx deployment file version
-        run: |
-          sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/k8s/nginx-deployment.yaml
+      # - name: update nginx deployment file version
+      #   run: |
+      #     sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/k8s/nginx-deployment.yaml
 
 
       - name: copy k8s files via ssh
@@ -71,6 +71,7 @@ jobs:
           password: ${{ secrets.PREPROD_PASSWORD }}
           script: |
             kubectl create secret generic back-envs \
+            --save-config --dry-run=client \
             --from-literal PREPROD_PORT=${{ secrets.PREPROD_PORT }} \
             --from-literal NGINX_STATIC_LOCATION=${{ secrets.NGINX_STATIC_LOCATION }} \
             --from-literal NEST_START_CMD=${{ secrets.NEST_START_CMD }} \
@@ -86,6 +87,7 @@ jobs:
             --from-literal JWT_REFRESH_TTL=${{ secrets.JWT_REFRESH_TTL }} \
             --from-literal JWT_ISSUER=${{ secrets.JWT_ISSUER }}
             kubectl apply -f /srv/k8s/back
+            docker run -p 80:80 -p 443:443 mo29172/unionista_nginx:v${{ github.run_number }} 
 
       # - name: Install PM2
       #   run: npm i pm2 --force
