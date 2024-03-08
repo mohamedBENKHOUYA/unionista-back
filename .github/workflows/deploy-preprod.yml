@@ -62,8 +62,18 @@ jobs:
           host: ${{ secrets.PREPROD_HOST }}
           username: ${{ secrets.PREPROD_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
-          source: 'docker/k8s/back-deployment.yaml,docker/k8s/db-deployment.yaml,docker/k8s/db-cluster-ip-service.yaml,docker/k8s/back-cluster-ip-service.yaml,docker/k8s/back-ingress-service.yaml,docker/k8s/db-persistent-volume-claim.yaml,docker/nginx/docker-compose.yml'
+          source: 'docker/k8s/back-deployment.yaml,docker/k8s/db-deployment.yaml,docker/k8s/db-cluster-ip-service.yaml,docker/k8s/back-cluster-ip-service.yaml,docker/k8s/back-ingress-service.yaml,docker/k8s/db-persistent-volume-claim.yaml'
           target: '/srv/k8s/back'
+          strip_components: 2
+
+      - name: copy nginx file via ssh
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.PREPROD_HOST }}
+          username: ${{ secrets.PREPROD_USER }}
+          key: ${{ secrets.PREPROD_SSH_KEY }}
+          source: 'docker/nginx/docker-compose.yml'
+          target: '/srv/k8s/nginx'
           strip_components: 2
 
       - name: apply k8s files
@@ -90,7 +100,7 @@ jobs:
             --from-literal JWT_REFRESH_TTL=${{ secrets.JWT_REFRESH_TTL }} \
             --from-literal JWT_ISSUER=${{ secrets.JWT_ISSUER }}
             kubectl apply -f /srv/k8s/back
-            docker-compose up -d --build
+            docker-compose -f /srv/k8s/nginx/docker-compose.yml up -d --build
 
       # - name: Install PM2
       #   run: npm i pm2 --force
