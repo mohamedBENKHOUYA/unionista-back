@@ -12,7 +12,7 @@ async function bootstrap() {
   await DataSource.initialize()
   .catch((err) => Logger.error(`Error during DataSource initalization: ${err}`));
   await DataSource.runMigrations({transaction: 'all'})
-  .then((res) => Logger.debug(`Successfully executed pending migrations${res? ' :' + res: '.'}`))
+  .then((res) => Logger.debug('Successfully executed pending migrations.'))
   .catch((err) => Logger.error(`Error while executing pending migrations: ${err}`));
 }
 bootstrap();

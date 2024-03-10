@@ -16,4 +16,4 @@ spec:
               service:
                 name: back-cluster-ip-service
                 port:
-                  number: 4000
+                  number: 3000

@@ -28,11 +28,6 @@ spec:
                 secretKeyRef:
                   name: back-envs
                   key: NGINX_STATIC_LOCATION  
-            - name: NEST_START_CMD
-              valueFrom:
-                secretKeyRef:
-                  name: back-envs
-                  key: NEST_START_CMD  
             - name: TYPEORM_HOST
               valueFrom:
                 secretKeyRef:

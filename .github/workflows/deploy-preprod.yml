@@ -42,20 +42,6 @@ jobs:
           sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/k8s/back-deployment.yaml
 
 
-      - name: build nginx image
-        run: |
-          docker build -t mo29172/unionista_nginx:v${{ github.run_number }} -f docker/nginx/Dockerfile .
-      - name: push nginx image to docker hub
-        run: |
-          docker push mo29172/unionista_nginx:v${{ github.run_number }}
-      - name: update nginx docker-compose file version
-        run: |
-          sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/nginx/docker-compose.yml
-      # - name: update nginx deployment file version
-      #   run: |
-      #     sed -i -e"s/:latest/:v${{ github.run_number }}/" docker/k8s/nginx-deployment.yaml
-
-
       - name: copy k8s files via ssh
         uses: appleboy/scp-action@master
         with:
@@ -72,8 +58,8 @@ jobs:
           host: ${{ secrets.PREPROD_HOST }}
           username: ${{ secrets.PREPROD_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
-          source: 'docker/nginx/docker-compose.yml'
-          target: '/srv/k8s/nginx'
+          source: 'docker/nginx/default.conf'
+          target: '/etc/nginx/conf.d'
           strip_components: 2
 
       - name: apply k8s files
@@ -83,11 +69,10 @@ jobs:
           username: ${{ secrets.SSH_SECOND_USER }}
           password: ${{ secrets.PREPROD_PASSWORD }}
           script: |
+            kubectl delete secret back-envs
             kubectl create secret generic back-envs \
-            --save-config --dry-run=client \
             --from-literal PREPROD_PORT=${{ secrets.PREPROD_PORT }} \
             --from-literal NGINX_STATIC_LOCATION=${{ secrets.NGINX_STATIC_LOCATION }} \
-            --from-literal NEST_START_CMD=${{ secrets.NEST_START_CMD }} \
             --from-literal TYPEORM_HOST=${{ secrets.TYPEORM_HOST }} \
             --from-literal TYPEORM_PORT=${{ secrets.TYPEORM_PORT }} \
             --from-literal TYPEORM_USERNAME=${{ secrets.TYPEORM_USERNAME }} \
@@ -100,11 +85,4 @@ jobs:
             --from-literal JWT_REFRESH_TTL=${{ secrets.JWT_REFRESH_TTL }} \
             --from-literal JWT_ISSUER=${{ secrets.JWT_ISSUER }}
             kubectl apply -f /srv/k8s/back
-            docker-compose -f /srv/k8s/nginx/docker-compose.yml up -d --build
-
-      # - name: Install PM2
-      #   run: npm i pm2 --force
-
-      # - name: Deploy
-      #   run: |
-      #     npm run deploy-preprod
+            echo ${{ secrets.UBUNTU_USER_PASSWORD }} | sudo -S systemctl restart nginx
