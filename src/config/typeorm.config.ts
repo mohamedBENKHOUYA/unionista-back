@@ -24,6 +24,7 @@ export const typeormConfig = registerAs('back_db', async function () {
     password: env.TYPEORM_PASSWORD,
     database: env.TYPEORM_DATABASE,
     retryAttempts: env.TYPEORM_RETRY_ATTEMPTS,
-    entities: [join('__dirname', '..', '**', '*.model.js')],
+    entities: [join(__dirname, '..', '**', '*.model.js')],
+    migrations: [join(__dirname, '..', '..', 'scripts/migrations/*.js')],
   };
 });

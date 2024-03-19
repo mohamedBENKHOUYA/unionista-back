@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { VariationModel } from './variation.model';
-import { ESupportedLocales } from '../../shared/paginator/dtos/page-options';
+import { ESupportedLocales } from '@src/shared/paginator/dtos/page-options';
 
 @Entity({ name: 'variation_translation' })
 export class VariationTranslation {

@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  back:
+    container_name: back
+    build:
+      context: './'
+      dockerfile: './docker/back/Dockerfile.dev'
+    volumes:
+      - '.:/app:rw,cached'
+      - '/app/node_modules'
+    restart: on-failure
+    ports:
+      - 4000:3000
+
+
+  back_db:
+    platform: linux/x86_64
+    image: 'postgres:14-alpine'
+    container_name: postgres
+    restart: on-failure
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=back_db

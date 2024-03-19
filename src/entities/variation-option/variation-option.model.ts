@@ -1,4 +1,4 @@
-import { BaseModel } from '../../shared/base-model';
+import { BaseModel } from '@src/shared/base-model';
 import {
   Column,
   Entity,
