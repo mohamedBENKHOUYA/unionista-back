@@ -39,6 +39,7 @@ export class ProductCategoryController {
     description: '',
   })
   list(@Query() queryOptions: IPageOptions) {
+    this.logger.log('GET product-category/', 'access');
     return this.productCategoryService.list(queryOptions);
   }
 
