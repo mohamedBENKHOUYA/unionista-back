@@ -7,11 +7,6 @@ spec:
   selector: 
     matchLabels:
       component: back_db
-  strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 25%;
-      maxUnavailable: 25%;
   template:
     metadata:
       labels:
