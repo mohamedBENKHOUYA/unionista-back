@@ -85,4 +85,5 @@ jobs:
             --from-literal JWT_REFRESH_TTL=${{ secrets.JWT_REFRESH_TTL }} \
             --from-literal JWT_ISSUER=${{ secrets.JWT_ISSUER }}
             kubectl apply -f /srv/k8s/back
+            minikube addons enable ingress
             echo ${{ secrets.UBUNTU_USER_PASSWORD }} | sudo -S systemctl restart nginx
