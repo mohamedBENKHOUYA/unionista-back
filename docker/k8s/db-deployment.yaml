@@ -8,10 +8,10 @@ spec:
     matchLabels:
       component: back_db
   strategy:
-    roolingUpdate:
+    type: RollingUpdate
+    rollingUpdate:
       maxSurge: 25%;
       maxUnavailable: 25%;
-    type: RollingUpdate
   template:
     metadata:
       labels:
