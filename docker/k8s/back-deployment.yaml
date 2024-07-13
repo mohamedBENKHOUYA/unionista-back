@@ -16,14 +16,6 @@ spec:
           image: mo29172/unionista_back:latest
           ports:
             - containerPort: 3000
-          readinessProbe:
-            httpGet:
-              port: 3000
-              path: /
-          livenessProbe:
-            httpGet:
-              port: 3000
-              path: /
           resources:
             limits:
               cpu: 500m
