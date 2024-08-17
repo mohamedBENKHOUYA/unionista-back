@@ -35,7 +35,7 @@ export class AuthService {
     if (!compareSync(data.password, user.password)) {
       throw new UnauthorizedException();
     }
-    const [accessToken, refreshToken] = this._getTokens({
+    const [accessToken, refreshToken] = this._getJWTTokens({
       email: user.emailAddress,
       sub: user.id,
     });
@@ -55,20 +55,23 @@ export class AuthService {
     }
 
     const user = await this.userService.create(data as CreateUserDto);
-    const [accessToken, refreshToken] = this._getTokens({
+    const [accessToken, refreshToken] = this._getJWTTokens({
       sub: user.id,
       email: user.emailAddress,
     });
     return { user, accessToken: accessToken, refreshToken: refreshToken };
   }
 
-  async refreshTokens(user: UserModel) {
+  async refreshToken(user: UserModel) {
     // const user = await this.userService.findOneBy({ id: userId });
-    const [accessToken, refreshToken] = this._getTokens({
+    const accessToken = this._getJWTToken({
       email: user.emailAddress,
       sub: user.id,
     });
-    return { accessToken: accessToken, refreshToken: refreshToken };
+    return {
+      success: true,
+      accessToken: accessToken,
+    };
   }
 
   private _generateJWT(
@@ -83,7 +86,7 @@ export class AuthService {
     });
   }
 
-  private _getTokens(payload: JwtPayload) {
+  private _getJWTTokens(payload: JwtPayload) {
     return [
       this._generateJWT(payload, {
         ttl: this.jwtConfig.jwtAccessTtl,
@@ -94,5 +97,12 @@ export class AuthService {
         jwtKey: this.jwtConfig.jwtRefreshKey,
       }),
     ];
+  }
+
+  private _getJWTToken(payload: JwtPayload) {
+    return this._generateJWT(payload, {
+      ttl: this.jwtConfig.jwtAccessTtl,
+      jwtKey: this.jwtConfig.jwtAccessKey,
+    });
   }
 }

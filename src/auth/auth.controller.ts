@@ -70,8 +70,8 @@ export class AuthController {
   }
 
   @UseGuards(JwtRefreshGuard)
-  @Get('refresh')
+  @Post('/refresh')
   refreshTokens(@Req() req: Request & { user: UserModel }) {
-    return this.authService.refreshTokens(req.user);
+    return this.authService.refreshToken(req.user);
   }
 }

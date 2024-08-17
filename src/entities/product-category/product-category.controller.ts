@@ -24,6 +24,7 @@ import { ProductCategoryOutoingDto } from './dtos/product-category-outgoing.dto'
 import { ParseInterceptor } from '@src/shared/interceptors/parse.interceptor';
 import { JwtAccessGuard } from '@src/auth/guards/jwt-access.guard';
 
+@UseGuards(JwtAccessGuard)
 @Controller('product-category')
 export class ProductCategoryController {
   private readonly logger = new Logger('product-category');
