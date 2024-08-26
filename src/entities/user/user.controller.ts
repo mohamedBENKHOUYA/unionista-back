@@ -27,7 +27,6 @@ import { UserModel } from './user.model';
 export class UserController {
   private readonly logger = new Logger('user');
   constructor(private userService: UserService) {
-    console.log();
   }
 
   // @Get('/videos/:id')

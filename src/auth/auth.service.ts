@@ -1,25 +1,21 @@
-import { sign, verify } from 'jsonwebtoken';
-import { UserAlreadyExistsException } from '@src/exceptions/http-exceptions/UserAlreadyExistsException';
-import { hash, compareSync, genSalt } from 'bcrypt';
-import { SigninDto } from '@src/entities/user/dtos/signin.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserModel } from '@src/entities/user/user.model';
-import { Repository } from 'typeorm';
 import {
-  ForbiddenException,
   Inject,
-  UnauthorizedException,
+  UnauthorizedException
 } from '@nestjs/common';
-import { SignupDto } from '@src/entities/user/dtos/signup.dto';
 import {
   JwtConfig,
   JwtPayload,
   jwtConfig as jwtConfigEnv,
 } from '@src/config/jwt.config';
-import { UserService } from '@src/entities/user/user.service';
 import { CreateUserDto } from '@src/entities/user/dtos/create-user.dto';
+import { SigninDto } from '@src/entities/user/dtos/signin.dto';
+import { SignupDto } from '@src/entities/user/dtos/signup.dto';
+import { UserModel } from '@src/entities/user/user.model';
+import { UserService } from '@src/entities/user/user.service';
+import { UserAlreadyExistsException } from '@src/exceptions/http-exceptions/UserAlreadyExistsException';
 import { UserNotFoundException } from '@src/exceptions/http-exceptions/UserNotFoundException';
-import { join } from 'path';
+import { compareSync } from 'bcrypt';
+import * as jose from 'jose';
 
 export class AuthService {
   constructor(
@@ -35,9 +31,11 @@ export class AuthService {
     if (!compareSync(data.password, user.password)) {
       throw new UnauthorizedException();
     }
-    const [accessToken, refreshToken] = this._getJWTTokens({
-      email: user.emailAddress,
+    const [accessToken, refreshToken] = await this._getJWTTokens({
       sub: user.id,
+      email: user.emailAddress,
+      fullName: user.fullName,
+      avatarUrl: user.avatarPath,
     });
     return { user, accessToken: accessToken, refreshToken: refreshToken };
   }
@@ -55,18 +53,22 @@ export class AuthService {
     }
 
     const user = await this.userService.create(data as CreateUserDto);
-    const [accessToken, refreshToken] = this._getJWTTokens({
+    const [accessToken, refreshToken] = await this._getJWTTokens({
       sub: user.id,
       email: user.emailAddress,
+      fullName: user.fullName,
+      avatarUrl: user.avatarPath,
     });
     return { user, accessToken: accessToken, refreshToken: refreshToken };
   }
 
   async refreshToken(user: UserModel) {
     // const user = await this.userService.findOneBy({ id: userId });
-    const accessToken = this._getJWTToken({
-      email: user.emailAddress,
+    const accessToken = await this._getJWTToken({
       sub: user.id,
+      email: user.emailAddress,
+      fullName: user.fullName,
+      avatarUrl: user.avatarPath,
     });
     return {
       success: true,
@@ -74,20 +76,20 @@ export class AuthService {
     };
   }
 
-  private _generateJWT(
+  private async _generateJWT(
     payload: JwtPayload,
     { ttl, jwtKey }: { ttl: string; jwtKey: string },
-  ): string {
-    const privateKey = jwtKey;
-    return sign(payload, privateKey, {
-      issuer: this.jwtConfig.jwtIssuer,
-      expiresIn: ttl,
-      // algorithm: '',
-    });
+  ): Promise<string> {
+    const secret = new TextEncoder().encode(jwtKey);
+    return await new jose.SignJWT({ ...payload })
+      .setIssuer(this.jwtConfig.jwtIssuer)
+      .setProtectedHeader({ alg: 'HS256' })
+      .setExpirationTime(ttl)
+      .sign(secret);
   }
 
-  private _getJWTTokens(payload: JwtPayload) {
-    return [
+  private async _getJWTTokens(payload: JwtPayload) {
+    const tokens = await Promise.all([
       this._generateJWT(payload, {
         ttl: this.jwtConfig.jwtAccessTtl,
         jwtKey: this.jwtConfig.jwtAccessKey,
@@ -96,7 +98,8 @@ export class AuthService {
         ttl: this.jwtConfig.jwtRefreshTtl,
         jwtKey: this.jwtConfig.jwtRefreshKey,
       }),
-    ];
+    ]);
+    return tokens;
   }
 
   private _getJWTToken(payload: JwtPayload) {
@@ -105,4 +108,35 @@ export class AuthService {
       jwtKey: this.jwtConfig.jwtAccessKey,
     });
   }
+
+  static async verifyJwt(
+    jwt: string,
+    jwtKey: string,
+  ): Promise<JwtSuccessResponse | JwtFailureResponse> {
+    const secret = new TextEncoder().encode(jwtKey);
+    return jose
+      .jwtVerify(jwt, secret)
+      .then((res) => {
+        return {
+          success: true,
+          ...res,
+        };
+      })
+      .catch((error) => {
+        return {
+          success: false,
+          message: error.message,
+        };
+      });
+  }
+}
+
+export interface JwtSuccessResponse {
+  success: boolean;
+  payload: jose.JWTPayload;
+}
+
+export interface JwtFailureResponse {
+  success: boolean;
+  message: string;
 }

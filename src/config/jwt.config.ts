@@ -11,6 +11,8 @@ export interface JwtConfig {
 
 export interface JwtPayload {
   email: string;
+  fullName: string;
+  avatarUrl: string;
   sub: string;
 }
 

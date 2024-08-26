@@ -40,7 +40,6 @@ export class AuthController {
   async signin(@Body(new YupPipe(signinSchema)) data: SigninDto) {
     this.logger.log('POST signin-user/', 'access');
     const signedUser = await this.authService.signin(data);
-    // res.setHeader('Set-Cookie', `auth=${signedUser.token}; HttpOnly; Secure;`);
     return signedUser;
   }
 
@@ -58,14 +57,12 @@ export class AuthController {
   ) {
     this.logger.log('POST signup-user/', 'access');
     data.userAvatarFile = userAvatarFile;
-    console.log('user avatar filevatar: ', userAvatarFile);
     return this.authService.signup(data);
   }
 
   @UseGuards(JwtAccessGuard)
   @Post('/signout')
   signout(@Req() req) {
-    console.log('signout');
     return req.user;
   }
 

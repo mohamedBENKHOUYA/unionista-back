@@ -9,23 +9,24 @@ import { UserService } from '@src/entities/user/user.service';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-@Injectable()
-export class RefreshJwtStrategy extends PassportStrategy(
-  Strategy,
-  'jwt-refresh',
-) {
-  constructor(
-    @Inject(jwtConfigEnv.KEY) private jwtConfig: JwtConfig,
-    private userService: UserService,
-  ) {
-    super({
-      jwtFromRequest: ExtractJwt.fromBodyField('refresh_token'),
-      secretOrKey: jwtConfig.jwtRefreshKey,
-    });
-  }
+// @Injectable()
+// export class RefreshJwtStrategy extends PassportStrategy(
+//   Strategy,
+//   'jwt-refresh',
+// ) {
+//   constructor(
+//     @Inject(jwtConfigEnv.KEY) private jwtConfig: JwtConfig,
+//     private userService: UserService,
+//   ) {
+//     super({
+//       jwtFromRequest: ExtractJwt.fromBodyField('refresh_token'),
+//       secretOrKey: jwtConfig.jwtRefreshKey,
+//     });
+//   }
 
-  async validate(payload: JwtPayload) {
-    const user = await this.userService.findOneBy({ id: payload.sub });
-    return user;
-  }
-}
+//   async validate(payload: JwtPayload) {
+//     console.log('comming refresh')
+//     const user = await this.userService.findOneBy({ id: payload.sub });
+//     return user;
+//   }
+// }
