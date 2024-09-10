@@ -14,11 +14,8 @@ export class YupPipe implements PipeTransform {
     } catch (err) {
       if (ValidationError.isError(err)) {
         throw new HttpException(
-          {
-            message: err.message,
-            error: err,
-          },
-          this.code,
+          { message: err.errors.join('\n'), status: HttpStatus.BAD_REQUEST },
+          HttpStatus.BAD_REQUEST,
         );
       } else {
         throw err;

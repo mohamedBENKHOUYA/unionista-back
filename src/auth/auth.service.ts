@@ -26,10 +26,10 @@ export class AuthService {
   async signin(data: SigninDto) {
     const user = await this.userService.findOneBy({ emailAddress: data.email });
     if (!user) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('user not found.');
     }
     if (!compareSync(data.password, user.password)) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('authentication parameters not valid.');
     }
     const [accessToken, refreshToken] = await this._getJWTTokens({
       sub: user.id,
