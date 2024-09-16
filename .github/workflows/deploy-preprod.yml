@@ -87,3 +87,5 @@ jobs:
             kubectl apply -f /srv/k8s/back
             minikube addons enable ingress
             echo ${{ secrets.UBUNTU_USER_PASSWORD }} | sudo -S systemctl restart nginx
+            echo y | docker exec -i minikube docker image prune -a
+            echo y | docker exec -i minikube docker volume prune -a
