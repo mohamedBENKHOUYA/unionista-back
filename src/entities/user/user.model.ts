@@ -14,8 +14,8 @@ export class UserModel extends BaseModel {
   @Column({ name: 'full_name' })
   fullName: string;
 
-  @Column({ name: 'email_address' })
-  emailAddress: string;
+  @Column({ name: 'email' })
+  email: string;
 
   @Exclude()
   @Column()

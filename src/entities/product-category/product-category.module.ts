@@ -5,6 +5,7 @@ import { ProductCategoryTranslation } from './product-category-trans.model';
 import { ProductCategoryController } from './product-category.controller';
 import { ProductCategoryModel } from './product-category.model';
 import { ProductCategoryService } from './product-category.service';
+import { AuthModule } from '@src/auth/auth.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { ProductCategoryService } from './product-category.service';
       ProductCategoryModel,
       ProductCategoryTranslation,
     ]),
-    UserModule
+    UserModule,
+    AuthModule
   ],
   controllers: [ProductCategoryController],
   providers: [ProductCategoryService],

@@ -10,6 +10,14 @@ export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const user = request.user as UserModel | AdminModel | null;
-    return false;
+
+    if (!user) return false;
+
+    const role = user instanceof AdminModel ? 'admin' : 'user';
+
+    if (!this.roles.includes(role)) {
+      return false;
+    }
+    return true;
   }
 }

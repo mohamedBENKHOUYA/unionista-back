@@ -23,8 +23,9 @@ import { Serialize } from '@src/shared/interceptors/serialize.interceptor';
 import { ProductCategoryOutoingDto } from './dtos/product-category-outgoing.dto';
 import { ParseInterceptor } from '@src/shared/interceptors/parse.interceptor';
 import { JwtAccessGuard } from '@src/auth/guards/jwt-access.guard';
+import { RolesGuard } from '@src/auth/guards/roles.guard';
 
-@UseGuards(JwtAccessGuard)
+@UseGuards(JwtAccessGuard, new RolesGuard(['admin']))
 @Controller('product-category')
 export class ProductCategoryController {
   private readonly logger = new Logger('product-category');

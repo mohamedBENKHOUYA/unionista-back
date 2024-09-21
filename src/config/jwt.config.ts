@@ -1,5 +1,6 @@
 import { registerAs } from '@nestjs/config';
-import { number, object, string } from 'yup';
+import { Role } from '@src/auth/guards/roles.guard';
+import { object, string } from 'yup';
 
 export interface JwtConfig {
   jwtAccessKey: string;
@@ -14,6 +15,7 @@ export interface JwtPayload {
   fullName: string;
   avatarUrl: string;
   sub: string;
+  role: Role
 }
 
 const jwtSchema = object({

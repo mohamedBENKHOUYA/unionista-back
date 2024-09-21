@@ -1,13 +1,12 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { typeormConfig } from '@src/config/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import { typeormConfig } from '@src/config/typeorm.config';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { jwtConfig } from './config/jwt.config';
 import { ProductCategoryModule } from './entities/product-category/product-category.module';
 import { UserModule } from './entities/user/user.module';
-import { jwtConfig } from './config/jwt.config';
-import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,7 +20,6 @@ import { AuthModule } from './auth/auth.module';
     }),
     ProductCategoryModule,
     UserModule,
-    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
