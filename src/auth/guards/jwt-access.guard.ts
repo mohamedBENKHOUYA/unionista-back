@@ -3,7 +3,6 @@ import { JwtConfig, jwtConfig as jwtConfigEnv } from '@src/config/jwt.config';
 import { Request } from 'express';
 import { AuthService, JwtSuccessResponse } from '../auth.service';
 
-
 export class JwtAccessGuard implements CanActivate {
   constructor(
     @Inject(jwtConfigEnv.KEY) private jwtConfig: JwtConfig,
@@ -20,9 +19,9 @@ export class JwtAccessGuard implements CanActivate {
       this.jwtConfig.jwtAccessKey,
     );
     if (res.success) {
-      request.user = await this.authService.findUser({
-        email: (res as JwtSuccessResponse).payload.email as string,
-      });
+      request.user = (await this.authService.findUser({
+        email: (res as JwtSuccessResponse).payload.email,
+      }));
       return true;
     }
     return false;

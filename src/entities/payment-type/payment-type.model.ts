@@ -1,7 +1,7 @@
 import { BaseModel } from '../../shared/base-model';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { UserPaymentMethodModel } from '../user-payment-method/user-payment-method.model';
 import { PaymentTypeTranslation } from './payment-type-trans.model';
+import { ClientPaymentMethodModel } from '../client-payment-method/client-payment-method.model';
 
 // examples: credit-card, paypal...or other payment types we want to support.
 @Entity({ name: 'payment_type' })
@@ -10,10 +10,10 @@ export class PaymentTypeModel extends BaseModel {
   id: string;
 
   @OneToMany(
-    () => UserPaymentMethodModel,
-    (userPaymentMethod) => userPaymentMethod.paymentType,
+    () => ClientPaymentMethodModel,
+    (clientPaymentMethod) => clientPaymentMethod.paymentType,
   )
-  userPaymentMethods: UserPaymentMethodModel[] | null;
+  clientPaymentMethods: ClientPaymentMethodModel[] | null;
 
   @OneToMany(
     () => PaymentTypeTranslation,

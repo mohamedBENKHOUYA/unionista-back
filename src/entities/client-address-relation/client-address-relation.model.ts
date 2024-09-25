@@ -7,10 +7,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AddressModel } from '../address/address.model';
-import { UserModel } from '../user/user.model';
+import { ClientModel } from '../user/client/client.model';
 
-@Entity({ name: 'user_address_relation' })
-export class UserAddressRelationModel extends BaseModel {
+@Entity({ name: 'client_address_relation' })
+export class ClientAddressRelationModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -18,9 +18,9 @@ export class UserAddressRelationModel extends BaseModel {
   @JoinColumn({ name: 'address_id' })
   address: AddressModel;
 
-  @ManyToOne(() => UserModel)
-  @JoinColumn({ name: 'user_id' })
-  user: UserModel;
+  @ManyToOne(() => ClientModel)
+  @JoinColumn({ name: 'client_id' })
+  client: ClientModel;
 
   @Column({ name: 'is_default', type: 'boolean' })
   isDefault: boolean;

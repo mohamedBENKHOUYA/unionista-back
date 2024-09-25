@@ -1,19 +1,18 @@
-import { BaseModel } from '../../shared/base-model';
 import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from 'typeorm';
-import { UserModel } from '../user/user.model';
-import { UserPaymentMethodModel } from '../user-payment-method/user-payment-method.model';
+import { BaseModel } from '../../shared/base-model';
 import { AddressModel } from '../address/address.model';
-import { ShippingMethodModel } from '../shipping-method/shipping-method.model';
-import { OrderStatusModel } from '../order-status/order-status.model';
+import { ClientPaymentMethodModel } from '../client-payment-method/client-payment-method.model';
 import { OrderLineModel } from '../order-line/order-line.model';
+import { OrderStatusModel } from '../order-status/order-status.model';
+import { ShippingMethodModel } from '../shipping-method/shipping-method.model';
+import { ClientModel } from '../user/client/client.model';
 
 @Entity({ name: 'shop_order' })
 export class ShopOrderModel extends BaseModel {
@@ -26,17 +25,17 @@ export class ShopOrderModel extends BaseModel {
   @Column({ name: 'order_total' })
   orderTotal: number;
 
-  @Column({ name: 'user_id', nullable: true })
-  userId: string;
-  @ManyToOne(() => UserModel)
-  @JoinColumn({ name: 'user_id' })
-  user: UserModel;
+  @Column({ name: 'client_id', nullable: true })
+  clientId: string;
+  @ManyToOne(() => ClientModel)
+  @JoinColumn({ name: 'client_id' })
+  client: ClientModel;
 
-  @Column({ name: 'user_payment_method_id' })
-  userPaymentMethodId: string;
-  @ManyToOne(() => UserPaymentMethodModel)
-  @JoinColumn({ name: 'user_payment_method_id' })
-  userPaymentMethod: UserPaymentMethodModel;
+  @Column({ name: 'client_payment_method_id' })
+  clientPaymentMethodId: string;
+  @ManyToOne(() => ClientPaymentMethodModel)
+  @JoinColumn({ name: 'client_payment_method_id' })
+  clientPaymentMethod: ClientPaymentMethodModel;
 
   @Column({ name: 'shipping_address_id' })
   shippingAddressId: string;

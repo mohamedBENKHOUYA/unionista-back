@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { JwtConfig, jwtConfig as jwtConfigEnv } from '@src/config/jwt.config';
 import { AuthService, JwtSuccessResponse } from '../auth.service';
+import { Request } from 'express';
 
 @Injectable()
 export class JwtRefreshGuard implements CanActivate {
@@ -15,7 +16,7 @@ export class JwtRefreshGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest() as Request;
     const refreshToken = request.body.refresh_token;
     if (!refreshToken) return false;
 

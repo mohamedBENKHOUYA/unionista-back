@@ -24,12 +24,12 @@ interface PixelData {
   event_id: number;
   event_name: string;
   event_time: number;
-  user_data?: {
+  client_data?: {
     client_ip_address: string;
-    client_user_agetn: string;
+    client_agetn: string;
     em: string;
   };
   event_source_path: string;
-  client_user_agent: string;
+  client_agent: string;
   client_ip_address: string;
 }

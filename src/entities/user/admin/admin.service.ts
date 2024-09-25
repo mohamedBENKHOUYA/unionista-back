@@ -2,10 +2,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { AdminModel } from './admin.model';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateAdminDto } from './dtos/create-admin.dto';
 import { genSalt, hash } from 'bcrypt';
 import { UpdateAdminDto } from './dtos/update-admin.dto';
 import { AdminNotFoundException } from './exceptions/AdminNotFoundException';
+import { CreateAdminDto } from './dtos/create-admin.dto';
 
 @Injectable()
 export class AdminService {

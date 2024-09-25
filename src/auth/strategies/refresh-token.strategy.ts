@@ -5,7 +5,6 @@ import {
   JwtPayload,
   jwtConfig as jwtConfigEnv,
 } from '@src/config/jwt.config';
-import { UserService } from '@src/entities/user/user.service';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 

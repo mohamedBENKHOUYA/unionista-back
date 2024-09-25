@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   Logger,
   Post,
@@ -10,20 +9,26 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiOkResponse } from '@nestjs/swagger';
-import { SigninDto, signinSchema } from '@src/entities/user/dtos/signin.dto';
-import { SignupDto, signupSchema } from '@src/entities/user/dtos/signup.dto';
-import { UserOutgoingDto } from '@src/entities/user/dtos/user-outgoing.dto';
-import { UserService } from '@src/entities/user/user.service';
+import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ClientModel } from '@src/entities/user/client/client.model';
+import {
+  ClientSignupDto,
+  clientSignupSchema,
+} from '@src/entities/user/client/dtos/client-signup.dto';
+import {
+  UserSigninDto,
+  userSigninSchema,
+} from '@src/entities/user/dtos/user-signin.dto';
 import { Serialize } from '@src/shared/interceptors/serialize.interceptor';
 import { YupPipe } from '@src/utils/joi.pipe';
+import { Request } from 'express';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtAccessGuard } from './guards/jwt-access.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';
-import { Request, Express } from 'express';
-import { UserModel } from '@src/entities/user/user.model';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { UserOutgoingDto } from '@src/entities/user/dtos/user-outgoing.dto';
+import { ClientOutgoingDto } from '@src/entities/user/client/dtos/client-outgoing.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -37,27 +42,27 @@ export class AuthController {
   })
   @Serialize(UserOutgoingDto)
   @Post('/signin')
-  async signin(@Body(new YupPipe(signinSchema)) data: SigninDto) {
+  async signin(@Body(new YupPipe(userSigninSchema)) data: UserSigninDto) {
     this.logger.log('POST signin-user/', 'access');
-    const signedUser = await this.authService.signin(data);
+    const signedUser = await this.authService.signinUser(data);
     return signedUser;
   }
 
   @HttpCode(200)
-  @ApiOperation({ summary: 'Sign up' })
+  @ApiOperation({ summary: 'Client sign up' })
   @ApiOkResponse({
-    description: 'the user has been successfully signed up',
+    description: 'the client has been successfully signed up',
   })
-  @Serialize(UserOutgoingDto)
+  @Serialize(ClientOutgoingDto)
   @Post('/signup')
   @UseInterceptors(FileInterceptor('avatarFile'))
   async signup(
-    @Body(new YupPipe(signupSchema)) data: SignupDto,
-    @UploadedFile() userAvatarFile: Express.Multer.File,
+    @Body(new YupPipe(clientSignupSchema)) data: ClientSignupDto,
+    @UploadedFile() avatarFile: Express.Multer.File,
   ) {
-    this.logger.log('POST signup-user/', 'access');
-    data.userAvatarFile = userAvatarFile;
-    return this.authService.signup(data);
+    this.logger.log('POST signup-client/', 'access');
+    data.avatarFile = avatarFile;
+    return this.authService.signupClient(data);
   }
 
   @UseGuards(JwtAccessGuard)
@@ -68,7 +73,7 @@ export class AuthController {
 
   @UseGuards(JwtRefreshGuard)
   @Post('/refresh')
-  refreshTokens(@Req() req: Request & { user: UserModel }) {
+  refreshTokens(@Req() req: Request) {
     return this.authService.refreshToken(req.user);
   }
 }

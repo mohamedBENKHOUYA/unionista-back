@@ -8,27 +8,28 @@ import {
   JwtPayload,
   jwtConfig as jwtConfigEnv,
 } from '@src/config/jwt.config';
-import { AdminModel } from '@src/entities/admin/admin.model';
-import { AdminService } from '@src/entities/admin/admin.service';
-import { CreateUserDto } from '@src/entities/user/dtos/create-user.dto';
-import { SigninDto } from '@src/entities/user/dtos/signin.dto';
-import { SignupDto } from '@src/entities/user/dtos/signup.dto';
-import { UserModel } from '@src/entities/user/user.model';
-import { UserService } from '@src/entities/user/user.service';
-import { UserAlreadyExistsException } from '@src/exceptions/http-exceptions/UserAlreadyExistsException';
-import { UserNotFoundException } from '@src/exceptions/http-exceptions/UserNotFoundException';
+import { AdminModel } from '@src/entities/user/admin/admin.model';
+import { AdminService } from '@src/entities/user/admin/admin.service';
+import { ClientModel } from '@src/entities/user/client/client.model';
+import { ClientService } from '@src/entities/user/client/client.service';
+import { ClientSignupDto } from '@src/entities/user/client/dtos/client-signup.dto';
+import { CreateClientDto } from '@src/entities/user/client/dtos/create-client.dto';
+import { UserSigninDto } from '@src/entities/user/dtos/user-signin.dto';
+import { User } from '@src/entities/user/dtos/user.dto';
+import { ClientAlreadyExistsException } from '@src/exceptions/http-exceptions/ClientAlreadyExistsException';
+import { ClientNotFoundException } from '@src/exceptions/http-exceptions/ClientNotFoundException';
 import { compareSync } from 'bcrypt';
 import * as jose from 'jose';
 import { FindOptionsWhere } from 'typeorm';
 
 export class AuthService {
   constructor(
-    private userService: UserService,
+    private clientService: ClientService,
     private adminService: AdminService,
     @Inject(jwtConfigEnv.KEY) private jwtConfig: JwtConfig,
   ) {}
 
-  async signin(data: SigninDto) {
+  async signinUser(data: UserSigninDto) {
     const user = await this.findUser({ email: data.email });
 
     if (!user) {
@@ -51,46 +52,46 @@ export class AuthService {
         sub: user.id,
         email: user.email,
         fullName: user.fullName,
-        avatarUrl: user.avatarPath,
-        role: 'user',
+        avatarUrl: user.avatarUrl,
+        role: 'client',
       });
     }
     return { user, accessToken: accessToken, refreshToken: refreshToken };
   }
 
-  async signup(data: SignupDto) {
+  async signupClient(data: ClientSignupDto) {
     try {
-      await this.userService.findOneBy({
+      await this.clientService.findOneBy({
         email: data.email,
       });
-      throw new UserAlreadyExistsException();
+      throw new ClientAlreadyExistsException();
     } catch (error) {
-      if (!(error instanceof UserNotFoundException)) {
+      if (!(error instanceof ClientNotFoundException)) {
         throw error;
       }
     }
 
-    const user = await this.userService.create(data as CreateUserDto);
+    const client = await this.clientService.create(data as CreateClientDto);
     const [accessToken, refreshToken] = await this._getJWTTokens({
-      sub: user.id,
-      email: user.email,
-      fullName: user.fullName,
-      avatarUrl: user.avatarPath,
-      role: 'user',
+      sub: client.id,
+      email: client.email,
+      fullName: client.fullName,
+      avatarUrl: client.avatarUrl,
+      role: 'client',
     });
-    return { user, accessToken: accessToken, refreshToken: refreshToken };
+    return { client, accessToken: accessToken, refreshToken: refreshToken };
   }
 
-  async refreshToken(user: UserModel | AdminModel) {
+  async refreshToken(user: User) {
     // const user = await this.userService.findOneBy({ id: userId });
     let payload: JwtPayload;
-    if (user instanceof UserModel) {
+    if (user instanceof ClientModel) {
       payload = {
         sub: user.id,
         email: user.email,
         fullName: user.fullName,
-        avatarUrl: user.avatarPath,
-        role: 'user',
+        avatarUrl: user.avatarUrl,
+        role: 'client',
       };
     } else {
       payload = {
@@ -163,11 +164,11 @@ export class AuthService {
   }
 
   public async findUser(
-    filters: FindOptionsWhere<AdminModel | UserModel | null>,
+    filters: FindOptionsWhere<User | null>,
   ) {
-    let user: AdminModel | UserModel | null = null;
+    let user: User | null = null;
     try {
-      user = await this.userService.findOneBy(filters);
+      user = await this.clientService.findOneBy(filters);
     } catch (error) {
       if (error instanceof NotFoundException) {
         try {

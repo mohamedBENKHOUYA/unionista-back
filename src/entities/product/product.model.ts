@@ -10,7 +10,7 @@ import {
 import { ProductCategoryModel } from '../product-category/product-category.model';
 import { ProductItemModel } from '../product-item/product-item.model';
 
-import { UserReviewModel } from '../user-review/user-review.model';
+import { ClientReviewModel } from '../client-review/client-review.model';
 import { ProductTranslation } from './product-trans.model';
 
 @Entity('product')
@@ -31,8 +31,8 @@ export class ProductModel extends BaseModel {
   //   @JoinTable({ name: 'product_variation_relation' })
   //   variations: VariationModel[];
 
-  @OneToMany(() => UserReviewModel, (userReview) => userReview.product)
-  userReviews: UserReviewModel[] | null;
+  @OneToMany(() => ClientReviewModel, (clientReview) => clientReview.product)
+  clientReviews: ClientReviewModel[] | null;
 
   @OneToMany(() => ProductItemModel, (productItem) => productItem.product)
   productItems: ProductItemModel[] | null;

@@ -6,7 +6,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { jwtConfig } from './config/jwt.config';
 import { ProductCategoryModule } from './entities/product-category/product-category.module';
-import { UserModule } from './entities/user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { ClientModule } from './entities/user/client/client.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { UserModule } from './entities/user/user.module';
       useFactory: (config) => config,
     }),
     ProductCategoryModule,
-    UserModule,
+    AuthModule,
+    ClientModule,
   ],
   controllers: [AppController],
   providers: [AppService],

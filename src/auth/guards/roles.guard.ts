@@ -1,19 +1,20 @@
 import { CanActivate, ExecutionContext } from '@nestjs/common';
-import { AdminModel } from '@src/entities/admin/admin.model';
-import { UserModel } from '@src/entities/user/user.model';
+import { AdminModel } from '@src/entities/user/admin/admin.model';
+import { User } from '@src/entities/user/dtos/user.dto';
+import { Request } from 'express';
 
-export type Role = 'user' | 'admin';
+export type Role = 'client' | 'admin';
 
 export class RolesGuard implements CanActivate {
   constructor(private readonly roles: Role[]) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest();
-    const user = request.user as UserModel | AdminModel | null;
+    const request = context.switchToHttp().getRequest() as Request;
+    const user = request.user as User | null;
 
     if (!user) return false;
 
-    const role = user instanceof AdminModel ? 'admin' : 'user';
+    const role = user instanceof AdminModel ? 'admin' : 'client';
 
     if (!this.roles.includes(role)) {
       return false;

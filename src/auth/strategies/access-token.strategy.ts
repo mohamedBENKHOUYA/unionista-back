@@ -5,7 +5,7 @@ import {
   JwtPayload,
   jwtConfig as jwtConfigEnv,
 } from '@src/config/jwt.config';
-import { UserService } from '@src/entities/user/user.service';
+import { ClientService } from '@src/entities/user/client/client.service';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
 @Injectable()
@@ -15,7 +15,7 @@ export class AccessJwtStrategy extends PassportStrategy(
 ) {
   constructor(
     @Inject(jwtConfigEnv.KEY) private jwtConfig: JwtConfig,
-    private userService: UserService,
+    private clientService: ClientService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -24,6 +24,6 @@ export class AccessJwtStrategy extends PassportStrategy(
   }
 
   async validate(payload: JwtPayload): Promise<any> {
-    return this.userService.findOneBy({ id: payload.sub });
+    return this.clientService.findOneBy({ id: payload.sub });
   }
 }

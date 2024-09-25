@@ -19,6 +19,7 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@src/*": ["src/*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types", "./custom-d-files"]
   }
 }

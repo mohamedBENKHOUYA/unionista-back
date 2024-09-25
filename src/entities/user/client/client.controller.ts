@@ -9,25 +9,26 @@ import {
   Post,
   Req,
   Res,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { SigninDto, signinSchema } from './dtos/signin.dto';
 import { YupPipe } from '@src/utils/joi.pipe';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
-import { UserService } from '@src/entities/user/user.service';
-import { signupSchema, SignupDto } from './dtos/signup.dto';
 import * as fs from 'fs';
 import { Request, Response } from 'express';
 import { join } from 'path';
 import { Serialize } from '@src/shared/interceptors/serialize.interceptor';
-import { UserOutgoingDto } from './dtos/user-outgoing.dto';
-import { UserModel } from './user.model';
+import { RolesGuard } from '@src/auth/guards/roles.guard';
+import { JwtAccessGuard } from '@src/auth/guards/jwt-access.guard';
+import { ClientModel } from './client.model';
+import { ClientService } from './client.service';
+import { ClientOutgoingDto } from './dtos/client-outgoing.dto';
 
-@Controller('users')
-export class UserController {
-  private readonly logger = new Logger('user');
-  constructor(private userService: UserService) {
-  }
+@UseGuards(JwtAccessGuard)
+@Controller('clients')
+export class ClientController {
+  private readonly logger = new Logger('client');
+  constructor(private clientService: ClientService) {}
 
   // @Get('/videos/:id')
   // getVideo(@Res({ passthrough: false }) res: Response, @Req() req: Request) {
@@ -67,26 +68,27 @@ export class UserController {
   //   fs.createReadStream(filePath, { start, end }).pipe(res);
   // }
 
+  @UseGuards(new RolesGuard(['admin']))
   @HttpCode(200)
-  @ApiOperation({ summary: 'List all users' })
+  @ApiOperation({ summary: 'List all clients' })
   @ApiOkResponse({
-    description: 'List all users',
+    description: 'List all clients',
   })
-  @Serialize(UserOutgoingDto)
+  @Serialize(ClientOutgoingDto)
   @Get()
   async list() {
-    this.logger.log('GET list of users', 'access');
-    return this.userService.list();
+    this.logger.log('GET list of clients', 'access');
+    return this.clientService.list();
   }
 
   @HttpCode(200)
-  @ApiOperation({ summary: 'Get one user by id' })
+  @ApiOperation({ summary: 'Get one client by id' })
   @ApiOkResponse({
-    description: 'One user',
+    description: 'One client',
   })
   @Get(':id')
-  async findUserById(@Param('id') id: string): Promise<UserModel> {
-    this.logger.log('GET one user by id', 'access');
-    return this.userService.findOneBy({ id: id });
+  async findClientById(@Param('id') id: string): Promise<ClientModel> {
+    this.logger.log('GET one client by id', 'access');
+    return this.clientService.findOneBy({ id: id });
   }
 }

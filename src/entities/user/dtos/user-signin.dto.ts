@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import * as Joi from 'yup';
 
-export class SigninDto {
+export class UserSigninDto {
   @ApiProperty({
     description: 'user email',
   })
@@ -16,7 +16,7 @@ export class SigninDto {
   stayConnected: boolean;
 }
 
-export const signinSchema = Joi.object({
+export const userSigninSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
   stayConnected: Joi.boolean(),

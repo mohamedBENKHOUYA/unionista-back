@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { CountryModel } from '../country/country.model';
 import { ShopOrderModel } from '../shop-order/shop-order.model';
-import { UserAddressRelationModel } from '../user-address-relation/user-address-relation.model';
+import { ClientAddressRelationModel } from '../client-address-relation/client-address-relation.model';
 
 @Entity({ name: 'address' })
 export class AddressModel extends BaseModel {
@@ -36,10 +36,10 @@ export class AddressModel extends BaseModel {
   country: CountryModel;
 
   @OneToMany(
-    () => UserAddressRelationModel,
-    (userAddressRelation) => userAddressRelation.address,
+    () => ClientAddressRelationModel,
+    (clientAddressRelation) => clientAddressRelation.address,
   )
-  userAddressRelations: UserAddressRelationModel[] | null;
+  clientAddressRelations: ClientAddressRelationModel[] | null;
 
   @OneToMany(() => ShopOrderModel, (shopOrder) => shopOrder.shippingAddress)
   shopOrders: ShopOrderModel[] | null;

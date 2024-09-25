@@ -8,11 +8,11 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { PaymentTypeModel } from '../payment-type/payment-type.model';
-import { UserModel } from '../user/user.model';
 import { ShopOrderModel } from '../shop-order/shop-order.model';
+import { ClientModel } from '../user/client/client.model';
 
-@Entity({ name: 'user_payment_method' })
-export class UserPaymentMethodModel extends BaseModel {
+@Entity({ name: 'client_payment_method' })
+export class ClientPaymentMethodModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -36,12 +36,12 @@ export class UserPaymentMethodModel extends BaseModel {
   @JoinColumn({ name: 'payment_type_id' })
   paymentType: PaymentTypeModel;
 
-  @Column({ name: 'user_id' })
-  userId: string;
-  @ManyToOne(() => UserModel)
-  @JoinColumn({ name: 'user_id' })
-  user: UserModel;
+  @Column({ name: 'client_id' })
+  clientId: string;
+  @ManyToOne(() => ClientModel)
+  @JoinColumn({ name: 'client_id' })
+  client: ClientModel;
 
-  @OneToMany(() => ShopOrderModel, (shopOrder) => shopOrder.userPaymentMethod)
+  @OneToMany(() => ShopOrderModel, (shopOrder) => shopOrder.clientPaymentMethod)
   shopOrders: ShopOrderModel[] | null;
 }
