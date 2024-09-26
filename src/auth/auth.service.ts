@@ -39,24 +39,25 @@ export class AuthService {
       throw new UnauthorizedException('authentication parameters not valid.');
     }
     let accessToken: string, refreshToken: string;
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+    } as JwtPayload;
     if (user instanceof AdminModel) {
-      [accessToken, refreshToken] = await this._getJWTTokens({
-        sub: user.id,
-        email: user.email,
-        fullName: `${user.firstName[0]}.${user.lastName}`,
-        avatarUrl: user.avatarUrl,
-        role: 'admin',
-      });
+      payload.fullName = `${user.firstName[0]}.${user.lastName}`;
+      payload.role = 'admin';
+      [accessToken, refreshToken] = await this._getJWTTokens(payload);
     } else {
-      [accessToken, refreshToken] = await this._getJWTTokens({
-        sub: user.id,
-        email: user.email,
-        fullName: user.fullName,
-        avatarUrl: user.avatarUrl,
-        role: 'client',
-      });
+      payload.fullName = user.fullName;
+      payload.role = 'client';
+      [accessToken, refreshToken] = await this._getJWTTokens(payload);
     }
-    return { user, accessToken: accessToken, refreshToken: refreshToken };
+    return {
+      userPayload: payload,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
   }
 
   async signupClient(data: ClientSignupDto) {
@@ -72,35 +73,34 @@ export class AuthService {
     }
 
     const client = await this.clientService.create(data as CreateClientDto);
-    const [accessToken, refreshToken] = await this._getJWTTokens({
+    const payload: JwtPayload = {
       sub: client.id,
       email: client.email,
       fullName: client.fullName,
       avatarUrl: client.avatarUrl,
       role: 'client',
-    });
-    return { client, accessToken: accessToken, refreshToken: refreshToken };
+    };
+    const [accessToken, refreshToken] = await this._getJWTTokens(payload);
+    return {
+      userPayload: payload,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
   }
 
   async refreshToken(user: User) {
     // const user = await this.userService.findOneBy({ id: userId });
-    let payload: JwtPayload;
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      avatarUrl: user.avatarUrl,
+    } as JwtPayload;
     if (user instanceof ClientModel) {
-      payload = {
-        sub: user.id,
-        email: user.email,
-        fullName: user.fullName,
-        avatarUrl: user.avatarUrl,
-        role: 'client',
-      };
+      payload.fullName = user.fullName;
+      payload.role = 'client';
     } else {
-      payload = {
-        sub: user.id,
-        email: user.email,
-        fullName: `${user.firstName[0]}.${user.lastName}`,
-        avatarUrl: user.avatarUrl,
-        role: 'admin',
-      };
+      payload.fullName = `${user.firstName[0]}.${user.lastName}`;
+      payload.role = 'client';
     }
     const accessToken = await this._getJWTToken(payload);
     return {
@@ -163,9 +163,7 @@ export class AuthService {
       });
   }
 
-  public async findUser(
-    filters: FindOptionsWhere<User | null>,
-  ) {
+  public async findUser(filters: FindOptionsWhere<User | null>) {
     let user: User | null = null;
     try {
       user = await this.clientService.findOneBy(filters);
