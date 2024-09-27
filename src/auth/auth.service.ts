@@ -100,7 +100,7 @@ export class AuthService {
       payload.role = 'client';
     } else {
       payload.fullName = `${user.firstName[0]}.${user.lastName}`;
-      payload.role = 'client';
+      payload.role = 'admin';
     }
     const accessToken = await this._getJWTToken(payload);
     return {
