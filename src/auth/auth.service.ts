@@ -32,11 +32,8 @@ export class AuthService {
   async signinUser(data: UserSigninDto) {
     const user = await this.findUser({ email: data.email });
 
-    if (!user) {
-      throw new UnauthorizedException('user not found.');
-    }
-    if (!compareSync(data.password, user.password)) {
-      throw new UnauthorizedException('authentication parameters not valid.');
+    if (!user || !compareSync(data.password, user.password)) {
+      throw new UnauthorizedException('Authentication parameters not valid.');
     }
     let accessToken: string, refreshToken: string;
     const payload = {

@@ -1,7 +1,7 @@
-import { HttpException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 
-export class AdminNotFoundException extends HttpException {
+export class AdminNotFoundException extends NotFoundException {
   constructor() {
-    super('admin not found', 404);
+    super('admin not found');
   }
 }
