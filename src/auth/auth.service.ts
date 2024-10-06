@@ -124,7 +124,7 @@ export class AuthService {
         jwtKey: this.jwtConfig.jwtAccessKey,
       }),
       this._generateJWT(payload, {
-        ttl: '1m',
+        ttl: this.jwtConfig.jwtRefreshTtl,
         jwtKey: this.jwtConfig.jwtRefreshKey,
       }),
     ]);
