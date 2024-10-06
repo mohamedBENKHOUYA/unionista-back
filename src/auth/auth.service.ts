@@ -101,7 +101,6 @@ export class AuthService {
     }
     const accessToken = await this._getJWTToken(payload);
     return {
-      success: true,
       accessToken: accessToken,
     };
   }
@@ -125,7 +124,7 @@ export class AuthService {
         jwtKey: this.jwtConfig.jwtAccessKey,
       }),
       this._generateJWT(payload, {
-        ttl: this.jwtConfig.jwtRefreshTtl,
+        ttl: '1m',
         jwtKey: this.jwtConfig.jwtRefreshKey,
       }),
     ]);

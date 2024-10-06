@@ -18,8 +18,11 @@ export class ProductModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'image_path', nullable: true })
-  imagePath: string;
+  @Column({ name: 'image_url', nullable: true })
+  imageUrl: string;
+
+  @Column({ unique: true })
+  slug: string;
 
   @Column({ name: 'category_id' })
   categoryId: string;

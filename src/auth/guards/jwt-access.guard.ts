@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, Inject } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+  Inject,
+} from '@nestjs/common';
 import { JwtConfig, jwtConfig as jwtConfigEnv } from '@src/config/jwt.config';
 import { Request } from 'express';
 import { AuthService, JwtSuccessResponse } from '../auth.service';
@@ -19,11 +24,14 @@ export class JwtAccessGuard implements CanActivate {
       this.jwtConfig.jwtAccessKey,
     );
     if (res.success) {
-      request.user = (await this.authService.findUser({
+      request.user = await this.authService.findUser({
         email: (res as JwtSuccessResponse).payload.email,
-      }));
+      });
       return true;
     }
-    return false;
+    throw new ForbiddenException({
+      success: false,
+      message: 'forbidden resource: cannot access',
+    });
   }
 }

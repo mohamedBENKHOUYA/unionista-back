@@ -15,6 +15,9 @@ export class VariationModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
+  value: string;
+
   // relationships
   //   @ManyToMany(() => ProductModel, (product) => product.variations)
   //   products: ProductModel[];

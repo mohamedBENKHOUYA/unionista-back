@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Inject,
   Injectable,
 } from '@nestjs/common';
@@ -26,9 +27,14 @@ export class JwtRefreshGuard implements CanActivate {
     );
     if (res.success) {
       res = res as JwtSuccessResponse;
-      request.user = await this.authService.findUser({ email: res.payload.email });
+      request.user = await this.authService.findUser({
+        email: res.payload.email,
+      });
       return true;
     }
-    return false;
+    throw new ForbiddenException({
+      success: false,
+      message: 'forbidden resource: cannot refresh',
+    });
   }
 }

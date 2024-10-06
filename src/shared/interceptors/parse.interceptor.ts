@@ -8,9 +8,6 @@ export class ParseInterceptor implements NestInterceptor {
     next: CallHandler<any>,
   ): Observable<any> | Promise<Observable<any>> {
     const request = context.switchToHttp().getRequest<Request>();
-    if (request.query?.where) {
-      request.query.where = JSON.parse(request.query.where as string);
-    }
     return next.handle();
   }
 }

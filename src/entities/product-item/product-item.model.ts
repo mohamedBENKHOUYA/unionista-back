@@ -25,8 +25,11 @@ export class ProductItemModel extends BaseModel {
   @Column({ name: 'quantity_in_stock', default: 0 })
   quantityInStock: number;
 
-  @Column({ name: 'image_path', nullable: true })
-  imagePath: string;
+  @Column({ name: 'image_url', nullable: true })
+  imageUrl: string;
+
+  @Column({ unique: true })
+  slug: string;
 
   @Column()
   price: number;
@@ -41,7 +44,17 @@ export class ProductItemModel extends BaseModel {
     () => VariationOptionModel,
     (variationOption) => variationOption.productItems,
   )
-  @JoinTable({ name: 'productitem_variationoption_relation' })
+  @JoinTable({
+    name: 'productitem_variationoption_relation',
+    joinColumn: {
+      name: 'product_item_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'variation_option_id',
+      referencedColumnName: 'id',
+    },
+  })
   variationOptions: VariationOptionModel[];
 
   @OneToMany(() => OrderLineModel, (orderLine) => orderLine.productItem)

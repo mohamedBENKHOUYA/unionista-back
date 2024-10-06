@@ -3,21 +3,24 @@ import { object, string } from 'yup';
 
 export class CreateProductCategoryDto {
   @ApiProperty()
-  imagePath?: string;
-
-  @ApiProperty()
-  parentCategoryId?: string | null;
-
-  @ApiProperty()
   name: string;
 
   @ApiProperty()
+  slug: string;
+
+  @ApiProperty()
   description: string;
+
+  @ApiProperty()
+  parentId?: string;
+
+  @ApiProperty()
+  imageFile?: Express.Multer.File;
 }
 
 export const createProductCategorySchema = object({
   name: string().required(),
+  slug: string().required(),
   description: string(),
-  imagePath: string(),
-  parentCategoryId: string(),
+  parentId: string(),
 });

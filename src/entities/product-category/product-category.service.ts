@@ -32,36 +32,35 @@ export class ProductCategoryService {
     @InjectEntityManager() private readonly entityManager: EntityManager,
   ) {}
 
-  list({ locale, where }: IPageOptions) {
+  async list({ locale, where, relations }: IPageOptions) {
     const alias = 'productCategory';
-    return andOrWhereQuery<ProductCategoryModel>(
-      this.productCategoryRepository
-        .createQueryBuilder('productCategory')
-        .leftJoinAndSelect('productCategory.translations', 'productCategories')
-        .leftJoinAndSelect('productCategory.childCategories', 'pc')
-        .where('productCategories.locale = :locale', {
-          locale: locale || ESupportedLocales.EN,
-        }),
-      where,
-      alias,
-    ).getMany();
+    let qb = this.productCategoryRepository
+      .createQueryBuilder(alias)
+      .leftJoinAndSelect('productCategory.translations', 'withTranslations');
+    if (locale) {
+      qb = qb.where('withTranslations.locale = :locale', {
+        locale: locale || ESupportedLocales.EN,
+      });
+    }
+    return andOrWhereQuery<ProductCategoryModel>(qb, where, alias)
+      .setFindOptions({
+        relations: relations,
+      })
+      .getMany();
   }
   async create(data: CreateProductCategoryDto, options: IPageOptions) {
     return await this.entityManager.transaction(
       async (transactionManager: EntityManager) => {
-        const createdProductCategory =
-          this.productCategoryRepository.create(data);
-        const savedProductCategory = await transactionManager.save(
-          createdProductCategory,
-        );
-        const productCategoryTranslation =
+        const entity = this.productCategoryRepository.create(data);
+        const saved = await transactionManager.save(entity);
+        const entityTranslation =
           this.productCategoryTranslationRepository.create({
             ...data,
-            id: savedProductCategory.id,
-            locale: options.locale,
+            id: saved.id,
+            // locale: options.locale,
           });
 
-        await transactionManager.save(productCategoryTranslation);
+        await transactionManager.save(entityTranslation);
       },
     );
   }
@@ -72,7 +71,7 @@ export class ProductCategoryService {
 
     const found = await qb
       .leftJoinAndSelect('productCategory.translations', 'productCategories')
-      .leftJoinAndSelect('productCategory.childCategories', 'pc')
+      .leftJoinAndSelect('productCategory.children', 'pc')
       .where('productCategories.locale = :locale', {
         locale: locale || ESupportedLocales.EN,
       })

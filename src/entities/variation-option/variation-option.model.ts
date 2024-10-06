@@ -17,6 +17,9 @@ export class VariationOptionModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column()
+  value: string;
+
   //   @PrimaryColumn({ name: 'id_variation' })
   //   variationId: string;
 

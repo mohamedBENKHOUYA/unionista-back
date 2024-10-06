@@ -10,7 +10,7 @@ export class ProductCategoryTranslation {
   @PrimaryColumn({ name: 'locale', type: 'enum', enum: ESupportedLocales })
   locale: ESupportedLocales;
 
-  @Column({ name: 'category_name' })
+  @Column({ name: 'name' })
   name: string;
 
   @Column({ type: 'text', nullable: true })

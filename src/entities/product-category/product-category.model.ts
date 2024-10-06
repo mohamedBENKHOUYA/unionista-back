@@ -1,5 +1,8 @@
 import { BaseModel } from '../../shared/base-model';
 import {
+  AfterInsert,
+  AfterLoad,
+  AfterUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -7,6 +10,7 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 import { PromotionModel } from '../promotion/promotion.model';
 import { ProductModel } from '../product/product.model';
@@ -18,16 +22,19 @@ export class ProductCategoryModel extends BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'image_path', nullable: true })
-  imagePath: string;
+  @Column({ name: 'image_url', nullable: true })
+  imageUrl: string;
 
-  @Column({ name: 'parent_category_id', nullable: true })
-  parentCategoryId: string;
+  @Column({ unique: true })
+  slug: string;
+
+  @Column({ name: 'parent_id', nullable: true })
+  parentId: string;
   @ManyToOne(() => ProductCategoryModel)
   @JoinColumn({
-    name: 'parent_category_id',
+    name: 'parent_id',
   })
-  parentCategory: ProductCategoryModel;
+  parent: ProductCategoryModel;
 
   @ManyToMany(() => PromotionModel, (promotion) => promotion.productCategories)
   promotions: PromotionModel[];
@@ -44,13 +51,23 @@ export class ProductCategoryModel extends BaseModel {
 
   @OneToMany(
     () => ProductCategoryModel,
-    (productCategory) => productCategory.parentCategory,
+    (productCategory) => productCategory.parent,
   )
-  childCategories: ProductCategoryModel[] | null;
+  children: ProductCategoryModel[] | null;
 
   @OneToMany(
     () => ProductCategoryTranslation,
     (productCategoryTranslation) => productCategoryTranslation.productCategory,
+    { eager: true },
   )
-  translations: ProductCategoryTranslation[] | null;
+  translations: ProductCategoryTranslation | null;
+
+  @AfterLoad()
+  @AfterInsert()
+  @AfterUpdate()
+  transform?() {
+    if (this.translations) {
+      this.translations = this.translations[0];
+    }
+  }
 }
