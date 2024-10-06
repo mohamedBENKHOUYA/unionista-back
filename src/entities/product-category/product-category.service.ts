@@ -1,26 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
 import {
-  Brackets,
-  EntityManager,
-  EntityMetadata,
-  FindOptionsUtils,
-  NotBrackets,
-  QueryBuilder,
-  Repository,
-  SelectQueryBuilder,
-  WhereExpression,
-  WhereExpressionBuilder,
-  getConnection,
-} from 'typeorm';
-import { ProductCategoryModel } from './product-category.model';
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException
+} from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { ProductCategoryTranslation } from './product-category-trans.model';
-import { CreateProductCategoryDto } from './dtos/create-product-category.dto';
 import {
   ESupportedLocales,
   IPageOptions,
   IWhere,
 } from '@src/shared/paginator/dtos/page-options';
+import {
+  Brackets,
+  EntityManager,
+  NotBrackets,
+  Repository,
+  SelectQueryBuilder
+} from 'typeorm';
+import { CreateProductCategoryDto } from './dtos/create-product-category.dto';
+import { ProductCategoryTranslation } from './product-category-trans.model';
+import { ProductCategoryModel } from './product-category.model';
 
 @Injectable()
 export class ProductCategoryService {
@@ -49,8 +47,8 @@ export class ProductCategoryService {
       .getMany();
   }
   async create(data: CreateProductCategoryDto, options: IPageOptions) {
-    return await this.entityManager.transaction(
-      async (transactionManager: EntityManager) => {
+    return await this.entityManager
+      .transaction(async (transactionManager: EntityManager) => {
         const entity = this.productCategoryRepository.create(data);
         const saved = await transactionManager.save(entity);
         const entityTranslation =
@@ -60,9 +58,13 @@ export class ProductCategoryService {
             // locale: options.locale,
           });
 
-        await transactionManager.save(entityTranslation);
-      },
-    );
+        return await transactionManager.save(entityTranslation);
+      })
+      .catch((error) => {
+        throw new InternalServerErrorException({
+          message: error.message,
+        });
+      });
   }
 
   async find({ id, locale }) {
